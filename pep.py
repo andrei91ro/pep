@@ -2,12 +2,24 @@
 
 import collections  # for named tuple && Counter (multisets)
 import re  # for regex
-from enum import Enum # for enumerations (enum from C)
+from enum import IntEnum # for enumerations (enum from C)
 import logging # for logging functions
-import random # for stochastic chosing of programs
 
 ##########################################################################
 # auxiliary definitions
+class OperatorType(IntEnum):
+
+    """Enumeration of operator types, ordered by precedence in calculus"""
+
+    left_brace   = 1
+    # right brace is never added to the postfix stack
+    add          = 2
+    subtract     = 3
+    multiply     = 4
+    divide       = 5
+    power        = 6
+
+# end class OperatorType
 
 # tuple used to describe parsed data
 Token = collections.namedtuple('Token', ['type', 'value', 'line', 'column'])
@@ -20,9 +32,9 @@ class NumericalPsystem():
     """Numerical P systems class"""
 
     def __init__(self):
-        membraneNames = [] # array of strings
-        membranes = {} # map (dictioanry) between String membrane_name: Membrane object
-        structureString = "" # [1 [2 ]2 ]1
+        self.H = [] # array of strings (names of membranes)
+        self.membranes = {} # map (dictioanry) between String membrane_name: Membrane object
+        self.structureString = "" # [1 [2 ]2 ]1
 
 # end class NumericalPsystem
 
@@ -44,7 +56,7 @@ class Program():
     """Program class"""
 
     def __init__(self):
-        self.prodFunction = [] # list of ProductionRule objects
+        self.prodFunction = None # ProductionFunction object
         self.distribFunction = [] # list of DistributionRule objects
 
     def print(self, indentSpaces = 2, toString = False) :
@@ -76,36 +88,15 @@ class Program():
     # end print()
 # end class Program
 
-class ProductionRule():
+class ProductionFunction():
 
-    """Class for the production rules that make up a program, together with the distribution rules
-    The rules allow the use of the +, -, *, /"""
+    """Production function class that stores expressions using the postfix (reversed polish) form"""
 
     def __init__(self):
-        self.quantity = 0 # float value, used for 3x rules or 0.5x rules. The sign is also specified here
-        self.exp = 1 # integer value, used for x^5 rules
-        self.variable = None # P object
+        self.postfixStack = [] # stack of operands and operators (auxiliary for postfix form)
+        self.items = [] # list of operands and operators written in postfix (reverse polish) form
 
-    def print(self, indentSpaces = 2, toString = False) :
-        """Print a production rule with a given indentation level
-
-        :indentSpaces: number of spaces used for indentation
-        :toString: write to a string instead of stdout
-        :returns: string print of the rule if toString = True otherwise returns None """
-
-        # SIGN QUANTITY VAR_NAME EXP
-        result = " " * indentSpaces + "%s%02f%s%s" % (
-                "+" if self.quantity >= 0 else "-", # almost C style conditional ( value_if_true if CONDITION else value_if_false)
-                self.quantity,
-                self.variable.name,
-                "^%d" % self.exp if self.exp != 1 else "" ) # almost C style conditional ( value_if_true if CONDITION else value_if_false)
-
-        if (toString):
-            return result
-        else:
-            print(result)
-    # end print()
-# end class ProductionRule
+# end class ProductionFunction
 
 class DistributionRule():
 
@@ -138,9 +129,9 @@ class Pobject():
 
     """Mutable objects that are needed in order to allow all membranes that use the P object to globally modify the object"""
 
-    def __init__(self):
-        self.name = ''
-        self.value = 0
+    def __init__(self, name = '', value = 0):
+        self.name = name
+        self.value = value
 # end class Pobject
 
 
@@ -156,10 +147,11 @@ def tokenize(code):
     """ generate a token list of input text
         adapted from https://docs.python.org/3/library/re.html#writing-a-tokenizer"""
     token_specification = [
+        ('NUMBER_FLOAT',  r'\d+\.\d+'),    # Float number
         ('NUMBER',        r'\d+'),         # Integer number
         ('ASSIGN',        r'='),           # Assignment operator '='
         ('END',           r';'),           # Statement terminator ';'
-        ('ID',            r'[\w\.]+'),     # Identifiers
+        ('ID',            r'[\w]+'),       # Identifiers
         ('L_BRACE',       r'\('),          # Left brace '('
         ('R_BRACE',       r'\)'),          # Right brace ')'
         ('L_CURLY_BRACE', r'{'),           # Left curly brace '{'
@@ -168,9 +160,12 @@ def tokenize(code):
         ('R_BRACKET', r'\]'),              # Right bracket (straight brace) ']'
         ('COLUMN',        r','),           # column ','
 
-        #order counts here (the more complex rules go first)
         ('PROD_DISTRIB_SEPARATOR', r'->'), # Program production and distribution component separator sign '->'
-        ('MATH_OPERATOR', r'[\*\^\+\-]'),  # Math operators (+, -, *, ^)
+        ('OPERATOR_ADD', r'\+'),          # Addition operator (+)
+        ('OPERATOR_SUBTRACT', r'\-'),         # Subtraction operator (-)
+        ('OPERATOR_MULTIPLY', r'\*'),      # Multiplication operator (*)
+        ('OPERATOR_DIVIDE', r'\/'),        # Division operator (/)
+        ('OPERATOR_POWER', r'\^'),         # Power operator (^)
         ('DISTRIBUTION_SIGN',    r'\|'),   # Distribution rule sign '|'
 
         ('NEWLINE',       r'\n'),          # Line endings
@@ -217,6 +212,215 @@ def print_token_by_line(v):
         print(token.value, end=" ");
 # end print_token_by_line()
 
+def process_tokens(tokens, parent, index):
+    """Process tokens recurently and return a P system structure (or a subcomponent of the same type as parent)
+
+    :tokens: the list of tokens to be processed
+    :parent: an object that represents the type of the result
+    :index: the start index in the list of tokens
+    :returns: index - the current index in the token list (after finishing this component)
+    :returns: result - an object that is the result of processing the input parent and tokens """
+
+    logging.debug("process_tokens (parent_type = %s, index = %d)" % (type(parent), index))
+    result = parent # construct the result of specified type
+    prev_token = tokens[index]
+
+    while (index < len(tokens)):
+        token = tokens[index]
+        logging.debug("token = '%s'" % token.value)
+
+        if (type(parent) == NumericalPsystem):
+            logging.debug("processing as NumericalPsystem")
+
+            if (token.type == 'ASSIGN'):
+                if (prev_token.value == 'H'):
+                    logging.info("building membrane list");
+                    index, result.H = process_tokens(tokens, list(), index + 1);
+                    print(result.H)
+
+                # if the prev_token is the name of a membrane
+                elif (prev_token.value in result.H):
+                    logging.info("building Membrane");
+                    index, result.membranes[prev_token.value] = process_tokens(tokens, Membrane(), index + 1);
+
+                else:
+                    raise RuntimeError("Unexpected token '%s' on line %d" % (prev_token.value, prev_token.line))
+        # end if parent == NumericalPsystem
+
+        elif (type(parent) == Membrane):
+            logging.debug("processing as Membrane")
+
+            if (token.type == 'ASSIGN'):
+                if (prev_token.value == 'var'):
+                    logging.info("building variable list");
+                    index, variables = process_tokens(tokens, list(), index + 1);
+                    for var in variables:
+                        result.variables.append(Pobject(name = var))
+
+                elif (prev_token.value == 'pr'):
+                    logging.info("building Program");
+                    index, program = process_tokens(tokens, Program(), index + 1);
+                    result.programs.append(program)
+
+                elif (prev_token.value == 'var0'):
+                    logging.info("building var0 list");
+                    index, variables = process_tokens(tokens, list(), index + 1);
+                    for i, var in enumerate(variables):
+                        result.variables[i].value = var
+
+                else:
+                    raise RuntimeError("Unexpected token '%s' on line %d" % (token.value, token.line))
+        # end if parent == Membrane
+
+        elif (type(parent) == Program):
+            logging.debug("processing as Program")
+
+            if (token.type == 'L_CURLY_BRACE'):
+                logging.info("building production function");
+                index, prodFunction = process_tokens(tokens, ProductionFunction(), index + 1);
+                result.prodFunction = prodFunction
+
+            elif (token.type == 'PROD_DISTRIB_SEPARATOR'):
+                logging.info("building distribution rule");
+                index, distribRule = process_tokens(tokens, DistributionRule(), index + 1);
+                result.distribFunction.append(distribRule)
+
+            elif (token.type == 'R_CURLY_BRACE'):
+                logging.info("finished this Program with result = %s" % result)
+                return index, result;
+
+            elif (token.type == 'END'):
+                logging.info("finished this block with result = %s" % result)
+                return index, result;
+
+            else:
+                raise RuntimeError("Unexpected token '%s' on line %d" % (token.value, token.line))
+        # end if parent == Program
+
+        elif (type(parent) == ProductionFunction):
+            logging.debug("processing as ProductionFunction")
+
+            if (token.type == 'NUMBER'):
+                logging.debug("processing integer number")
+                result.items.append(int(token.value))
+
+            elif (token.type == 'NUMBER_FLOAT'):
+                logging.debug("processing float number")
+                result.items.append(float(token.value))
+
+            elif (token.type == 'ID'):
+                logging.debug("processing variable")
+                result.items.append(token.value) # store as string for now, reference to real P object later
+
+            elif (token.type == 'L_BRACE'):
+                logging.debug("processing operator %s" % token.value)
+                # add the current operator to the postfix transformation
+                result.postfixStack.append(OperatorType.left_brace)
+
+            elif (token.type == 'R_BRACE'):
+                logging.debug("processing operator %s" % token.value)
+                # pop all elements in the stack up until the left brace and add them to the postfix form
+                while (OperatorType.left_brace in result.postfixStack):
+                    op = result.postfixStack.pop()
+                    # append all popped operators except of left_brace
+                    if (op != OperatorType.left_brace):
+                        result.items.append(op)
+
+            elif (token.type == 'OPERATOR_ADD'):
+                logging.debug("processing operator %s" % token.value)
+                # if there is an operator with precedence >= to that of the current operator, then pop the stack and insert it into the postfix transformation
+                if (len(result.postfixStack) > 0 and result.postfixStack[-1] >= OperatorType.add):
+                    result.items.append(result.postfixStack.pop())
+                # add the current operator to the postfix transformation
+                result.postfixStack.append(OperatorType.add)
+
+            elif (token.type == 'OPERATOR_SUBTRACT'):
+                logging.debug("processing operator %s" % token.value)
+                # if there is an operator with precedence >= to that of the current operator, then pop the stack and insert it into the postfix transformation
+                if (len(result.postfixStack) > 0 and result.postfixStack[-1] >= OperatorType.add):
+                    result.items.append(result.postfixStack.pop())
+                # add the current operator to the postfix transformation
+                result.postfixStack.append(OperatorType.subtract)
+
+            elif (token.type == 'OPERATOR_MULTIPLY'):
+                logging.debug("processing operator %s" % token.value)
+                # if there is an operator with precedence >= to that of the current operator, then pop the stack and insert it into the postfix transformation
+                if (len(result.postfixStack) > 0 and result.postfixStack[-1] >= OperatorType.multiply):
+                    result.items.append(result.postfixStack.pop())
+                # add the current operator to the postfix transformation
+                result.postfixStack.append(OperatorType.multiply)
+
+            elif (token.type == 'OPERATOR_DIVIDE'):
+                logging.debug("processing operator %s" % token.value)
+                # if there is an operator with precedence >= to that of the current operator, then pop the stack and insert it into the postfix transformation
+                if (len(result.postfixStack) > 0 and result.postfixStack[-1] >= OperatorType.multiply):
+                    result.items.append(result.postfixStack.pop())
+                # add the current operator to the postfix transformation
+                result.postfixStack.append(OperatorType.divide)
+
+            elif (token.type == 'OPERATOR_POWER'):
+                logging.debug("processing operator %s" % token.value)
+                # if there is an operator with precedence >= to that of the current operator, then pop the stack and insert it into the postfix transformation
+                if (len(result.postfixStack) > 0 and result.postfixStack[-1] >= OperatorType.power):
+                    result.items.append(result.postfixStack.pop())
+                # add the current operator to the postfix transformation
+                result.postfixStack.append(OperatorType.power)
+
+            elif (token.type == 'PROD_DISTRIB_SEPARATOR'):
+                logging.debug("production function end; emptying stack")
+                # pop all elements in the stack
+                while (len(result.postfixStack) > 0):
+                    result.items.append(result.postfixStack.pop())
+                logging.info("finished the production function with result = %s" % result.items)
+                # the Program should also see PROD_DISTRIB_SEPARATOR in order to trigger the build of a distribution function
+                return index-1, result;
+
+            elif (token.type == 'L_CURLY_BRACE'):
+                logging.debug("skipped left curly brace")
+                continue
+
+            else:
+                raise RuntimeError("Unexpected token '%s' on line %d" % (token.value, token.line))
+        # end if parent == ProductionFunction
+
+        elif (type(parent) == DistributionRule):
+            logging.debug("processing as DistributionRule")
+
+            if (token.type == 'R_CURLY_BRACE'):
+                logging.info("finished this DistributionRule with result = %s" % result)
+                return index, result;
+
+        # end if parent == DistributionRule
+        elif (type(parent) == list):
+            logging.debug("processing as List")
+            if (token.type == 'ID' or token.type == 'NUMBER'):
+                result.append(token.value);
+
+        elif (type(parent) == str):
+            logging.debug("processing as Str")
+            if (token.type == 'ID'):
+                result = token.value;
+
+        elif (type(parent) == int):
+            logging.debug("processing as Int")
+            if (token.type == 'NUMBER'):
+                result = int(token.value);
+
+        else:
+            logging.debug("processing as GENERAL")
+            # process the token generally
+            if (token.type == 'ASSIGN'):
+                logging.info("building NumericalPsystem")
+                index, result = process_tokens(tokens, NumericalPsystem(), index + 1);
+
+        if (token.type == 'END'):
+            logging.info("finished this block with result = %s" % result)
+            return index, result;
+
+        prev_token = token;
+        index += 1
+    return index, result
+#end process_tokens
 def readInputFile(filename, printTokens = False):
     """parses the given input file and produces a P system object
 
@@ -235,7 +439,7 @@ def readInputFile(filename, printTokens = False):
         print_token_by_line(tokens);
         print("\n\n");
 
-    #index, end_result = process_tokens(tokens, none, 0)
+    index, end_result = process_tokens(tokens, None, 0)
 
     #if (loglevel <= logging.warning):
         #print("\n\n");
@@ -245,7 +449,7 @@ def readInputFile(filename, printTokens = False):
             #end_result.print_colony_components(printdetails=true)
         #print("\n\n");
 
-    #return end_result
+    return end_result
 # end readinputfile()
 
 ##########################################################################
