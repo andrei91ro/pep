@@ -35,6 +35,7 @@ class NumericalPsystem():
         self.H = [] # array of strings (names of membranes)
         self.membranes = {} # map (dictioanry) between String membrane_name: Membrane object
         self.structureString = "" # [1 [2 ]2 ]1
+        self.variables = [] # list of Pobjects that appear throughtout the P system
 
 # end class NumericalPsystem
 
@@ -435,8 +436,14 @@ def process_tokens(tokens, parent, index):
 
         elif (type(parent) == list):
             logging.debug("processing as List")
-            if (token.type == 'ID' or token.type == 'NUMBER'):
+            if (token.type == 'ID'):
                 result.append(token.value);
+
+            elif (token.type == 'ID' or token.type == 'NUMBER'):
+                result.append(int(token.value));
+
+            elif (token.type == 'ID' or token.type == 'NUMBER_FLOAT'):
+                result.append(float(token.value));
 
         elif (type(parent) == str):
             logging.debug("processing as Str")
@@ -481,17 +488,34 @@ def readInputFile(filename, printTokens = False):
         print_token_by_line(tokens);
         print("\n\n");
 
-    index, end_result = process_tokens(tokens, None, 0)
+    index, system = process_tokens(tokens, None, 0)
 
-    #if (loglevel <= logging.warning):
-        #print("\n\n");
-        #if (type(end_result) == pswarm):
-            #end_result.print_swarm_components(printdetails=true)
-        #elif (type(end_result == pcolony)):
-            #end_result.print_colony_components(printdetails=true)
-        #print("\n\n");
+    logging.debug("constructing a global list of variables used in the entire P system")
+    for membrane in system.membranes.values():
+        for var in membrane.variables:
+            if var not in system.variables:
+                system.variables.append(var)
 
-    return end_result
+    logging.debug("cross-referencing string identifiers to the corresponding Pobject instance")
+    # cross-reference string identifiers with references to Pobject instances
+    for var in system.variables:
+        for (membrane_name, membrane) in system.membranes.items():
+            logging.debug("processing membrane %s" % membrane_name)
+            for pr in membrane.programs:
+                # replacing in production function
+                for i, item in enumerate(pr.prodFunction.items[:]):
+                    if (var.name == item):
+                        logging.debug("replacing '%s' in production function" % item)
+                        # string value is replaced with a Pobject reference
+                        pr.prodFunction.items[i] = var
+                # replacing in distribution function
+                for i, distribRule in enumerate(pr.distribFunction):
+                    if (var.name == distribRule.variable):
+                        logging.debug("replacing '%s' in distribution function" % distribRule.variable)
+                        # string value is replaced with a Pobject reference
+                        distribRule.variable = var
+
+    return system
 # end readinputfile()
 
 ##########################################################################
