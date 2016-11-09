@@ -57,7 +57,7 @@ class Program():
 
     def __init__(self):
         self.prodFunction = None # ProductionFunction object
-        self.distribFunction = [] # list of DistributionRule objects
+        self.distribFunction = None # DistributionFunction object
 
     def print(self, indentSpaces = 2, toString = False) :
         """Print a program with a given indentation level
@@ -97,6 +97,15 @@ class ProductionFunction():
         self.items = [] # list of operands and operators written in postfix (reverse polish) form
 
 # end class ProductionFunction
+
+class DistributionFunction(list):
+
+    """Distribution function class (list of distribution rules)"""
+
+    def __init__(self):
+        """Initialize the underling list used to store rules"""
+        list.__init__(self)
+# end class DistributionFunction
 
 class DistributionRule():
 
@@ -224,6 +233,8 @@ def process_tokens(tokens, parent, index):
     logging.debug("process_tokens (parent_type = %s, index = %d)" % (type(parent), index))
     result = parent # construct the result of specified type
     prev_token = tokens[index]
+    # for processing distribution rules
+    distribRule = None
 
     while (index < len(tokens)):
         token = tokens[index]
@@ -282,8 +293,7 @@ def process_tokens(tokens, parent, index):
 
             elif (token.type == 'PROD_DISTRIB_SEPARATOR'):
                 logging.info("building distribution rule");
-                index, distribRule = process_tokens(tokens, DistributionRule(), index + 1);
-                result.distribFunction.append(distribRule)
+                index, result.distribFunction = process_tokens(tokens, DistributionFunction(), index + 1);
 
             elif (token.type == 'R_CURLY_BRACE'):
                 logging.info("finished this Program with result = %s" % result)
@@ -377,11 +387,43 @@ def process_tokens(tokens, parent, index):
 
             elif (token.type == 'L_CURLY_BRACE'):
                 logging.debug("skipped left curly brace")
+                # continue to next token
+                prev_token = token;
+                index += 1
                 continue
 
             else:
                 raise RuntimeError("Unexpected token '%s' on line %d" % (token.value, token.line))
         # end if parent == ProductionFunction
+
+        elif (type(parent) == DistributionFunction):
+            logging.debug("processing as DistributionFunction")
+
+            if (token.type == 'NUMBER'):
+                # construct a new distribution rule
+                distribRule = DistributionRule()
+                distribRule.proportion = int(token.value)
+
+            elif (token.type == 'ID' and prev_token.type == "DISTRIBUTION_SIGN"):
+                # finalize the distribution rule
+                distribRule.variable = token.value # store as string for now, reference later
+                result.append(distribRule) # store the new distribution rule
+
+            # is used to separate rules, not needed
+            elif (token.type == 'OPERATOR_ADD' or token.type == "DISTRIBUTION_SIGN"):
+                logging.debug("skipped '+' or '|'")
+                # continue to next token
+                prev_token = token;
+                index += 1
+                continue
+
+            elif (token.type == 'R_CURLY_BRACE'):
+                logging.info("finished this DistributionFunction with result = %s" % result)
+                return index, result;
+
+            else:
+                raise RuntimeError("Unexpected token '%s' on line %d" % (token.value, token.line))
+        # end if parent == DistributionFunction
 
         elif (type(parent) == DistributionRule):
             logging.debug("processing as DistributionRule")
@@ -389,8 +431,8 @@ def process_tokens(tokens, parent, index):
             if (token.type == 'R_CURLY_BRACE'):
                 logging.info("finished this DistributionRule with result = %s" % result)
                 return index, result;
-
         # end if parent == DistributionRule
+
         elif (type(parent) == list):
             logging.debug("processing as List")
             if (token.type == 'ID' or token.type == 'NUMBER'):
