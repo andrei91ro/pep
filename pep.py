@@ -105,6 +105,56 @@ class ProductionFunction():
         self.postfixStack = [] # stack of operands and operators (auxiliary for postfix form)
         self.items = [] # list of operands and operators written in postfix (reverse polish) form
 
+    def evaluate(self):
+        """Evaluates the postfix form of a production function and returns the computed value.
+        During the evaluation, Pobject references are replaced with their value.
+        :returns: the computed value of the production function, as a numeric value"""
+
+        self.postfixStack = []
+        for item in self.items:
+            # numeric values get added on the stack
+            if (type(item) == int or type(item) == float):
+                self.postfixStack.append(item)
+
+            # the value of Pobjects is added to the stack
+            elif (type(item) == Pobject):
+                self.postfixStack.append(item.value)
+
+            # (binary) operators require that two values are popped and the result is added back to the stack
+            elif (item == OperatorType.add):
+                # apply the operator
+                self.postfixStack.append(self.postfixStack.pop() + self.postfixStack.pop())
+
+            elif (item == OperatorType.multiply):
+                # apply the operator
+                self.postfixStack.append(self.postfixStack.pop() * self.postfixStack.pop())
+
+            # order-dependent operators (-, /, ^) require that the operand order be opposite from that of the stack pop operation
+            elif (item == OperatorType.subtract):
+                op2 = self.postfixStack.pop()
+                op1 = self.postfixStack.pop()
+                # apply the operator
+                self.postfixStack.append(op1 - op2)
+
+            elif (item == OperatorType.divide):
+                op2 = self.postfixStack.pop()
+                op1 = self.postfixStack.pop()
+                # apply the operator
+                self.postfixStack.append(op1 / op2)
+
+            elif (item == OperatorType.power):
+                op2 = self.postfixStack.pop()
+                op1 = self.postfixStack.pop()
+                # apply the operator
+                self.postfixStack.append(op1 ** op2)
+
+            logging.debug("postfixStack = %s" % self.postfixStack)
+
+        if (len(self.postfixStack) > 1):
+            raise RuntimeError('evaluation error / wrong number of operands or operators')
+        return self.postfixStack[0]
+    # end evaluate()
+
 # end class ProductionFunction
 
 class DistributionFunction(list):
@@ -114,6 +164,15 @@ class DistributionFunction(list):
     def __init__(self):
         """Initialize the underling list used to store rules"""
         list.__init__(self)
+        self.proportionTotal = 0
+
+    def distribute(self, newValue):
+        """Update the variables referenced in the distribution rules according to the specified proportions
+        :newValue: a value that has to be distributed to the variables based on the proportions specified in the distribution rules"""
+
+        for distribRule in self:
+            distribRule.variable.value += (distribRule.proportion / self.proportionTotal) * newValue
+    # end distribute()
 # end class DistributionFunction
 
 class DistributionRule():
@@ -432,6 +491,7 @@ def process_tokens(tokens, parent, index):
             elif (token.type == 'ID' and prev_token.type == "DISTRIBUTION_SIGN"):
                 # finalize the distribution rule
                 distribRule.variable = token.value # store as string for now, reference later
+                result.proportionTotal += distribRule.proportion
                 result.append(distribRule) # store the new distribution rule
 
             # is used to separate rules, not needed
