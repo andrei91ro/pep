@@ -34,10 +34,18 @@ class NumericalPsystem():
     def __init__(self):
         self.H = [] # array of strings (names of membranes)
         self.membranes = {} # map (dictioanry) between String membrane_name: Membrane object
-        self.structureString = "" # [1 [2 ]2 ]1
+        self.structure = None # MembraneStructure object (list of structural elements) [1 [2 ]2 ]1
         self.variables = [] # list of Pobjects that appear throughtout the P system
 
 # end class NumericalPsystem
+
+class MembraneStructure(list):
+
+    """P system membrane structure (list of structural elements)"""
+
+    def __init__(self):
+        list.__init__(self)
+# end class MembraneStructure
 
 class Membrane():
 
@@ -248,16 +256,32 @@ def process_tokens(tokens, parent, index):
                 if (prev_token.value == 'H'):
                     logging.info("building membrane list");
                     index, result.H = process_tokens(tokens, list(), index + 1);
-                    print(result.H)
 
                 # if the prev_token is the name of a membrane
                 elif (prev_token.value in result.H):
                     logging.info("building Membrane");
                     index, result.membranes[prev_token.value] = process_tokens(tokens, Membrane(), index + 1);
 
+                elif (prev_token.value == 'structure'):
+                    logging.info("building membrane structure");
+                    index, result.structure = process_tokens(tokens, MembraneStructure(), index + 1);
+
                 else:
                     raise RuntimeError("Unexpected token '%s' on line %d" % (prev_token.value, prev_token.line))
         # end if parent == NumericalPsystem
+
+        elif (type(parent) == MembraneStructure):
+            logging.debug("processing as MembraneStructure")
+            if (token.type in ('ID', 'NUMBER', 'L_BRACKET', 'R_BRACKET')):
+                parent.append(token)
+
+            elif (token.type == 'END'):
+                logging.info("finished the MembraneStructure with result = %s" % result)
+                return index, result;
+
+            else:
+                raise RuntimeError("Unexpected token '%s' on line %d" % (token.value, token.line))
+        # end if parent == MembraneStructure
 
         elif (type(parent) == Membrane):
             logging.debug("processing as Membrane")
@@ -514,6 +538,32 @@ def readInputFile(filename, printTokens = False):
                         logging.debug("replacing '%s' in distribution function" % distribRule.variable)
                         # string value is replaced with a Pobject reference
                         distribRule.variable = var
+
+    logging.debug("Constructing the internal membrane structure of the P system")
+    # construct a tree representation of the P system for use for e.g. in membrane dissolution rules
+    # starting from a list of tokens: structure = [1[2]2[3]3]1
+    currentMembrane = None
+    prev_token = system.structure[0]
+    # iteration starts from the second token (system.structure[1])
+    for token in system.structure[1:]:
+        if (token.type in ('ID', 'NUMBER')):
+            # a new branch should be created
+            if (prev_token.type == 'L_BRACKET'):
+                if (currentMembrane == None):
+                    currentMembrane = system.membranes[token.value]
+                else:
+                    # create a new child membrane
+                    currentMembrane.children[token.value] = system.membranes[token.value]
+                    # retain the child membrane's parent
+                    currentMembrane.children[token.value].parent = currentMembrane
+                    currentMembrane = currentMembrane.children[token.value]
+
+            # a branch should be closed and move one level up
+            elif (prev_token.type == 'R_BRACKET'):
+                currentMembrane = currentMembrane.parent
+
+        # store previous token
+        prev_token = token
 
     return system
 # end readinputfile()
