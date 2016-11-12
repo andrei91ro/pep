@@ -21,6 +21,13 @@ class OperatorType(IntEnum):
 
 # end class OperatorType
 
+dictOperatorTypes = {
+        'OPERATOR_ADD': OperatorType.add,
+        'OPERATOR_SUBTRACT': OperatorType.subtract,
+        'OPERATOR_MULTIPLY': OperatorType.multiply,
+        'OPERATOR_DIVIDE': OperatorType.divide,
+        'OPERATOR_POWER': OperatorType.power}
+
 # tuple used to describe parsed data
 Token = collections.namedtuple('Token', ['type', 'value', 'line', 'column'])
 
@@ -37,6 +44,26 @@ class NumericalPsystem():
         self.structure = None # MembraneStructure object (list of structural elements) [1 [2 ]2 ]1
         self.variables = [] # list of Pobjects that appear throughtout the P system
 
+
+    def print(self, indentSpaces = 2, toString = False) :
+        """Print a membrane with a given indentation level
+
+        :indentSpaces: number of spaces used for indentation
+        :toString: write to a string instead of stdout
+        :returns: string print of the membrane if toString = True otherwise returns None """
+
+        result = ""
+
+        result += "var = {\n"
+        for membraneName, membrane in self.membranes.items():
+            result += " " * indentSpaces + "%s:\n %s" % (membraneName, membrane.print(indentSpaces + 2, toString=True))
+        result += "}\n"
+
+        if (toString):
+            return result
+        else:
+            print(result)
+    # end print()
 # end class NumericalPsystem
 
 class MembraneStructure(list):
@@ -58,6 +85,27 @@ class Membrane():
         self.enzymes = [] # array of P objects
         self.parent = parentMembrane # parent membrane (Membrane object)
         self.children = {} # map (dictioanry) between String membrane_name: Membrane object
+
+
+    def print(self, indentSpaces = 2, toString = False) :
+        """Print a membrane with a given indentation level
+
+        :indentSpaces: number of spaces used for indentation
+        :toString: write to a string instead of stdout
+        :returns: string print of the membrane if toString = True otherwise returns None """
+
+        result = " " * indentSpaces
+
+        result += "var = {"
+        for var in self.variables:
+            result += "  %s = %s  " % (var.name, var.value)
+        result += "}\n"
+
+        if (toString):
+            return result
+        else:
+            print(result)
+    # end print()
 # end class Membrane
 
 class Program():
@@ -219,6 +267,35 @@ logLevel = logging.INFO
 
 ##########################################################################
 # auxiliary functions
+
+def processPostfixOperator(postfixStack, operator):
+    """Compares the provided operator with a postfix stack to determine where to place a new operator (output list or stack)
+
+    :postfixStack: stack used for operators
+    :operator: OperatorType variable
+    :returns: postfixStack, outputList - outputList == array of OperatorType elements that have been popped from the stack"""
+
+    outputList = []
+
+    # if the operator has a higher precedence than the symbol at the top of the stack,
+    if (len(postfixStack) > 0 and operator > postfixStack[-1]):
+        # operator is pushed onto the stack
+        postfixStack.append(operator)
+    # If the precedence of the symbol being scanned is lower than or equal to the precedence of the symbol at the top of the stack,
+    elif (len(postfixStack) > 0 and operator <= postfixStack[-1]):
+        # one element of the stack is popped to the output;
+        outputList.append(postfixStack.pop())
+        # the scan pointer is not advanced. Instead, the symbol being scanned will be compared with the new top element on the stack.
+        newPostfixStack, newOutputList = processPostfixOperator(postfixStack, operator)
+
+        postfixStack = newPostfixStack
+        outputList.extend(newOutputList)
+    # if the stack is empty
+    elif (len(postfixStack) == 0):
+        postfixStack.append(operator)
+
+    return postfixStack, outputList
+# end processPostfixOperator()
 
 def tokenize(code):
     """ generate a token list of input text
@@ -420,45 +497,13 @@ def process_tokens(tokens, parent, index):
                     if (op != OperatorType.left_brace):
                         result.items.append(op)
 
-            elif (token.type == 'OPERATOR_ADD'):
+            elif (token.type in ('OPERATOR_ADD', 'OPERATOR_SUBTRACT', 'OPERATOR_MULTIPLY', 'OPERATOR_DIVIDE', 'OPERATOR_POWER')):
                 logging.debug("processing operator %s" % token.value)
-                # if there is an operator with precedence >= to that of the current operator, then pop the stack and insert it into the postfix transformation
-                if (len(result.postfixStack) > 0 and result.postfixStack[-1] >= OperatorType.add):
-                    result.items.append(result.postfixStack.pop())
-                # add the current operator to the postfix transformation
-                result.postfixStack.append(OperatorType.add)
+                # current operator as OperatorType enum value
+                currentOperator = dictOperatorTypes[token.type]
 
-            elif (token.type == 'OPERATOR_SUBTRACT'):
-                logging.debug("processing operator %s" % token.value)
-                # if there is an operator with precedence >= to that of the current operator, then pop the stack and insert it into the postfix transformation
-                if (len(result.postfixStack) > 0 and result.postfixStack[-1] >= OperatorType.add):
-                    result.items.append(result.postfixStack.pop())
-                # add the current operator to the postfix transformation
-                result.postfixStack.append(OperatorType.subtract)
-
-            elif (token.type == 'OPERATOR_MULTIPLY'):
-                logging.debug("processing operator %s" % token.value)
-                # if there is an operator with precedence >= to that of the current operator, then pop the stack and insert it into the postfix transformation
-                if (len(result.postfixStack) > 0 and result.postfixStack[-1] >= OperatorType.multiply):
-                    result.items.append(result.postfixStack.pop())
-                # add the current operator to the postfix transformation
-                result.postfixStack.append(OperatorType.multiply)
-
-            elif (token.type == 'OPERATOR_DIVIDE'):
-                logging.debug("processing operator %s" % token.value)
-                # if there is an operator with precedence >= to that of the current operator, then pop the stack and insert it into the postfix transformation
-                if (len(result.postfixStack) > 0 and result.postfixStack[-1] >= OperatorType.multiply):
-                    result.items.append(result.postfixStack.pop())
-                # add the current operator to the postfix transformation
-                result.postfixStack.append(OperatorType.divide)
-
-            elif (token.type == 'OPERATOR_POWER'):
-                logging.debug("processing operator %s" % token.value)
-                # if there is an operator with precedence >= to that of the current operator, then pop the stack and insert it into the postfix transformation
-                if (len(result.postfixStack) > 0 and result.postfixStack[-1] >= OperatorType.power):
-                    result.items.append(result.postfixStack.pop())
-                # add the current operator to the postfix transformation
-                result.postfixStack.append(OperatorType.power)
+                result.postfixStack, newOutputList = processPostfixOperator(result.postfixStack, currentOperator)
+                result.items.extend(newOutputList)
 
             elif (token.type == 'PROD_DISTRIB_SEPARATOR'):
                 logging.debug("production function end; emptying stack")
