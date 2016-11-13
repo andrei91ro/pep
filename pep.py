@@ -105,7 +105,7 @@ class NumericalPsystem():
             currentTime = time.time()
 
             if (printEachSystemState):
-                self.print_system_components()
+                self.print()
 
             if (stepByStepConfirm):
                 input("Press ENTER to continue")
@@ -124,15 +124,16 @@ class NumericalPsystem():
         #end while loop
 
         logging.info("Simulation finished succesfully after %d steps and %f seconds; End state below:" % (currentStep, currentTime - startTime))
-        self.print_colony_components()
+        self.print()
 
     # end simulate()
 
-    def print(self, indentSpaces = 2, toString = False) :
-        """Print a membrane with a given indentation level
+    def print(self, indentSpaces = 2, toString = False, withPrograms = False) :
+        """Print the entire Numerical P system with a given indentation level
 
         :indentSpaces: number of spaces used for indentation
         :toString: write to a string instead of stdout
+        :withPrograms: print out the programs from each membrane, along with the membrane variables
         :returns: string print of the membrane if toString = True otherwise returns None """
 
         result = ""
@@ -140,7 +141,7 @@ class NumericalPsystem():
         result += "var = {\n"
         for membraneName in self.H:
             membrane = self.membranes[membraneName]
-            result += " " * indentSpaces + "%s:\n %s" % (membraneName, membrane.print(indentSpaces + 2, toString=True))
+            result += " " * indentSpaces + "%s:\n%s" % (membraneName, membrane.print(indentSpaces * 2, toString=True, withPrograms=withPrograms))
         result += "}\n"
 
         if (toString):
@@ -172,19 +173,24 @@ class Membrane():
         self.children = {} # map (dictioanry) between String membrane_name: Membrane object
 
 
-    def print(self, indentSpaces = 2, toString = False) :
+    def print(self, indentSpaces = 2, toString = False, withPrograms = False) :
         """Print a membrane with a given indentation level
 
         :indentSpaces: number of spaces used for indentation
         :toString: write to a string instead of stdout
+        :withPrograms: print out the programs from each membrane, along with the membrane variables
         :returns: string print of the membrane if toString = True otherwise returns None """
 
         result = " " * indentSpaces
 
         result += "var = {"
         for var in self.variables:
-            result += "  %s = %s  " % (var.name, var.value)
+            result += " %s: %s, " % (var.name, var.value)
         result += "}\n"
+
+        if (withPrograms):
+            for i, program in enumerate(self.programs):
+                result += " " * indentSpaces + "pr_%d = { %s }\n" % (i, program.print(indentSpaces = 0, toString=True))
 
         if (toString):
             return result
@@ -208,20 +214,7 @@ class Program():
         :toString: write to a string instead of stdout
         :returns: string print of the rule if toString = True otherwise returns None """
 
-        result = " " * indentSpaces
-
-        # production section
-        for prod in self.prodFunction:
-            result += " " + prod.print(toString = True)
-
-        result += " -> "
-
-        # distribution section
-        for i, distrib in enumerate(self.distribFunction):
-            if (i == 0):
-                result += distrib.print(toString = True)
-            else:
-                result += " + " + distrib.print(toString = True)
+        result = " " * indentSpaces + self.prodFunction.infixExpression + "  ->  " + self.distribFunction.expression
 
         if (toString):
             return result
@@ -236,6 +229,7 @@ class ProductionFunction():
     """Production function class that stores expressions using the postfix (reversed polish) form"""
 
     def __init__(self):
+        self.infixExpression = "" # string representation of the original expression from the input file (written in infix form)
         self.postfixStack = [] # stack of operands and operators (auxiliary for postfix form)
         self.items = [] # list of operands and operators written in postfix (reverse polish) form
 
@@ -299,6 +293,7 @@ class DistributionFunction(list):
         """Initialize the underling list used to store rules"""
         list.__init__(self)
         self.proportionTotal = 0
+        self.expression = "" # string representation of the distribution function
 
     def distribute(self, newValue):
         """Update the variables referenced in the distribution rules according to the specified proportions
@@ -558,6 +553,9 @@ def process_tokens(tokens, parent, index):
 
         elif (type(parent) == ProductionFunction):
             logging.debug("processing as ProductionFunction")
+            # construct a string representation of the expression (in infix form)
+            if (token.type != 'PROD_DISTRIB_SEPARATOR'):
+                result.infixExpression += " " + token.value
 
             if (token.type == 'NUMBER'):
                 logging.debug("processing integer number")
@@ -599,6 +597,7 @@ def process_tokens(tokens, parent, index):
                 while (len(result.postfixStack) > 0):
                     result.items.append(result.postfixStack.pop())
                 logging.info("finished the production function with result = %s" % result.items)
+                result.infixExpression = result.infixExpression[1:] # strip the first character (leading space)
                 # the Program should also see PROD_DISTRIB_SEPARATOR in order to trigger the build of a distribution function
                 return index-1, result;
 
@@ -616,20 +615,33 @@ def process_tokens(tokens, parent, index):
         elif (type(parent) == DistributionFunction):
             logging.debug("processing as DistributionFunction")
 
+
             if (token.type == 'NUMBER'):
                 # construct a new distribution rule
                 distribRule = DistributionRule()
                 distribRule.proportion = int(token.value)
+                result.expression += " " + token.value
 
             elif (token.type == 'ID' and prev_token.type == "DISTRIBUTION_SIGN"):
                 # finalize the distribution rule
                 distribRule.variable = token.value # store as string for now, reference later
                 result.proportionTotal += distribRule.proportion
                 result.append(distribRule) # store the new distribution rule
+                result.expression += token.value
 
             # is used to separate rules, not needed
-            elif (token.type == 'OPERATOR_ADD' or token.type == "DISTRIBUTION_SIGN"):
-                logging.debug("skipped '+' or '|'")
+            elif (token.type == 'OPERATOR_ADD'):
+                result.expression += " " + token.value
+                logging.debug("skipped '+'")
+                # continue to next token
+                prev_token = token;
+                index += 1
+                continue
+
+            # is used to separate the proportion from the variable, not needed
+            elif (token.type == "DISTRIBUTION_SIGN"):
+                result.expression += token.value
+                logging.debug("skipped '|'")
                 # continue to next token
                 prev_token = token;
                 index += 1
@@ -637,6 +649,7 @@ def process_tokens(tokens, parent, index):
 
             elif (token.type == 'R_CURLY_BRACE'):
                 logging.info("finished this DistributionFunction with result = %s" % result)
+                result.expression = result.expression[1:] # strip the first character (leading space)
                 return index, result;
 
             else:
