@@ -4,6 +4,8 @@ import collections  # for named tuple && Counter (multisets)
 import re  # for regex
 from enum import IntEnum # for enumerations (enum from C)
 import logging # for logging functions
+import random # for stochastic chosing of programs
+import time # for time.time()
 
 ##########################################################################
 # auxiliary definitions
@@ -44,6 +46,84 @@ class NumericalPsystem():
         self.structure = None # MembraneStructure object (list of structural elements) [1 [2 ]2 ]1
         self.variables = [] # list of Pobjects that appear throughtout the P system
 
+    def runSimulationStep(self):
+        """Runs 1 simulation step consisting of executing one program (production & dispersion functions) for all membranes that have programs
+        If a membrane has more than one program, one is chosen randomly for execution"""
+
+        # production phase for all membranes
+        for membraneName, membrane in self.membranes.items():
+            if (len(membrane.programs) < 1):
+                continue
+            logging.debug("Production for membrane %s" % membraneName)
+
+            membrane.chosenProgramNr = 0 if len(membrane.programs) == 1 else random.randint(0, len(membrane.programs) - 1)
+            try:
+                # produce a new value
+                membrane.newValue = membrane.programs[membrane.chosenProgramNr].prodFunction.evaluate()
+            except RuntimeError:
+                logging.error("Error encountered during production function of membrane %s, program %d" % (membraneName, membrane.chosenProgramNr))
+                # re-raise the exception to stop the simulator
+                raise
+
+        ## reset variable phase
+        logging.debug("Resetting all variables to 0")
+        for variable in self.variables:
+            variable.value = 0
+
+        # distribution phase for all membranes
+        for membraneName, membrane in self.membranes.items():
+            if (len(membrane.programs) < 1):
+                continue
+            logging.debug("Distribution for membrane %s of unitary value %.02f" % (
+                membraneName,
+                membrane.newValue / membrane.programs[membrane.chosenProgramNr].distribFunction.proportionTotal))
+            # distribute the previously produced value
+            membrane.programs[membrane.chosenProgramNr].distribFunction.distribute(membrane.newValue)
+        logging.info("Simulation step finished succesfully")
+    # end runSimulationStep()
+
+    def simulate(self, stepByStepConfirm = False, printEachSystemState = True, maxSteps = -1, maxTime = -1):
+        """Simulates the numericP system until one of the imposed limits is reached
+
+        :stepByStepConfirm: True / False - whether or not to wait for confirmation before starting the next simulation step
+        :printEachSystemState: True / False - whether or not to print the P system state after the execution ofeach simulation step
+        :maxSteps: The maximmum number of simulation steps to run
+        :maxTime: The maximum time span that the entire simulation can last"""
+
+        currentStep = 0;
+         # time.time() == time in seconds since the Epoch
+        startTime = currentTime = time.time();
+        finalTime = currentTime + maxTime
+
+        while (True):
+            logging.info("Starting simulation step %d", currentStep)
+
+            self.runSimulationStep()
+            currentTime = time.time()
+
+            if (printEachSystemState):
+                self.print_system_components()
+
+            if (stepByStepConfirm):
+                input("Press ENTER to continue")
+
+            # if there is a maximum time limit set and it was exceded
+            if ((currentTime >= finalTime) and (maxTime > 0)):
+                logging.warning("Maximum time limit exceeded; Simulation stopped")
+                break # stop the simulation
+
+            # if there is a maximum step limit set and it was exceded
+            if ((currentStep >= maxSteps) and (maxSteps > 0)):
+                logging.warning("Maximum number of simulation steps exceeded; Simulation stopped")
+                break # stop the simulation
+
+            currentStep += 1
+        #end while loop
+
+        logging.info("Simulation finished succesfully after %d steps and %f seconds; End state below:" % (currentStep, currentTime - startTime))
+        self.print_colony_components()
+
+    # end simulate()
 
     def print(self, indentSpaces = 2, toString = False) :
         """Print a membrane with a given indentation level
@@ -81,7 +161,8 @@ class Membrane():
     def __init__(self, parentMembrane = None):
         self.variables = [] # array of P objects
         self.programs = [] # list of Program objects
-
+        self.chosenProgramNr = 0 # the program nr that was chosen for execution
+        self.newValue = 0 # the value that was produced during the previous production phase
         self.enzymes = [] # array of P objects
         self.parent = parentMembrane # parent membrane (Membrane object)
         self.children = {} # map (dictioanry) between String membrane_name: Membrane object
@@ -143,6 +224,14 @@ class Program():
         else:
             print(result)
     # end print()
+
+    def execute(self):
+        """Executes the production function and distributes the result to the specified variables according to the distribution function"""
+
+        newValue = self.prodFunction.evaluate()
+        logging.debug("Obtained new value %d after production function" % newValue)
+        self.distribFunction.distribute(newValue)
+    # end execute()
 # end class Program
 
 class ProductionFunction():
