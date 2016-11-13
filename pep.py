@@ -51,7 +51,8 @@ class NumericalPsystem():
         If a membrane has more than one program, one is chosen randomly for execution"""
 
         # production phase for all membranes
-        for membraneName, membrane in self.membranes.items():
+        for membraneName in self.H:
+            membrane = self.membranes[membraneName]
             if (len(membrane.programs) < 1):
                 continue
             logging.debug("Production for membrane %s" % membraneName)
@@ -66,12 +67,14 @@ class NumericalPsystem():
                 raise
 
         ## reset variable phase
-        logging.debug("Resetting all variables to 0")
+        logging.debug("Resetting all variables that are part of production functions to 0")
         for variable in self.variables:
-            variable.value = 0
+            if (variable.isPartOfProductionFunction):
+                variable.value = 0
 
         # distribution phase for all membranes
-        for membraneName, membrane in self.membranes.items():
+        for membraneName in self.H:
+            membrane = self.membranes[membraneName]
             if (len(membrane.programs) < 1):
                 continue
             logging.debug("Distribution for membrane %s of unitary value %.02f" % (
@@ -135,7 +138,8 @@ class NumericalPsystem():
         result = ""
 
         result += "var = {\n"
-        for membraneName, membrane in self.membranes.items():
+        for membraneName in self.H:
+            membrane = self.membranes[membraneName]
             result += " " * indentSpaces + "%s:\n %s" % (membraneName, membrane.print(indentSpaces + 2, toString=True))
         result += "}\n"
 
@@ -225,13 +229,6 @@ class Program():
             print(result)
     # end print()
 
-    def execute(self):
-        """Executes the production function and distributes the result to the specified variables according to the distribution function"""
-
-        newValue = self.prodFunction.evaluate()
-        logging.debug("Obtained new value %d after production function" % newValue)
-        self.distribFunction.distribute(newValue)
-    # end execute()
 # end class Program
 
 class ProductionFunction():
@@ -346,6 +343,8 @@ class Pobject():
     def __init__(self, name = '', value = 0):
         self.name = name
         self.value = value
+        # variables that are part of a production function are reset to 0 before distribution phase
+        self.isPartOfProductionFunction = False
 # end class Pobject
 
 
@@ -726,6 +725,8 @@ def readInputFile(filename, printTokens = False):
                         logging.debug("replacing '%s' in production function" % item)
                         # string value is replaced with a Pobject reference
                         pr.prodFunction.items[i] = var
+                        # mark this variable as part of a production function
+                        var.isPartOfProductionFunction = True
                 # replacing in distribution function
                 for i, distribRule in enumerate(pr.distribFunction):
                     if (var.name == distribRule.variable):
