@@ -93,7 +93,7 @@ class NumericalPsystem():
         :maxSteps: The maximmum number of simulation steps to run
         :maxTime: The maximum time span that the entire simulation can last"""
 
-        currentStep = 0;
+        currentStep = 1;
          # time.time() == time in seconds since the Epoch
         startTime = currentTime = time.time();
         finalTime = currentTime + maxTime
@@ -138,7 +138,7 @@ class NumericalPsystem():
 
         result = ""
 
-        result += "var = {\n"
+        result += "num_ps = {\n"
         for membraneName in self.H:
             membrane = self.membranes[membraneName]
             result += " " * indentSpaces + "%s:\n%s" % (membraneName, membrane.print(indentSpaces * 2, toString=True, withPrograms=withPrograms))
@@ -419,7 +419,7 @@ def tokenize(code):
     for mo in re.finditer(tok_regex, code):
         kind = mo.lastgroup # last group name matched
         value = mo.group(kind) # the last matched string (for group kind)
-        print("kind = %s, value = %s" % (kind, value))
+        #print("kind = %s, value = %s" % (kind, value))
         if kind == 'COMMENT':
             in_comment = True
         elif kind == 'NEWLINE':
@@ -822,6 +822,26 @@ if (__name__ == "__main__"):
     if ('--step' in sys.argv):
         step = True
 
-    system = readInputFile(sys.argv[1], True)
+    # nr of simulation steps
+    nrSteps = -2 # -2 == undefined, -1 == unlimited
+    if ('-n' in sys.argv):
+        try:
+            nrSteps = int(sys.argv[sys.argv.index('-n') + 1])
+        except (ValueError, IndexError):
+            logging.error("Expected a number (of simulation steps) after the '-n' parameter")
+        finally:
+            # if nrSteps still is undefined (-2)
+            if (nrSteps == -2):
+                exit(1)
+
+    system = readInputFile(sys.argv[1])
+
+
+    if (logLevel <= logging.WARNING):
+        # print the structure of the P system
+        system.print(indentSpaces=4, withPrograms = True)
+
+
+    system.simulate(stepByStepConfirm = step, maxSteps = nrSteps)
 
     print("\n\n");
