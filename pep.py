@@ -45,6 +45,7 @@ class NumericalPsystem():
         self.membranes = {} # map (dictioanry) between String membrane_name: Membrane object
         self.structure = None # MembraneStructure object (list of structural elements) [1 [2 ]2 ]1
         self.variables = [] # list of Pobjects that appear throughtout the P system
+        self.enzymes = [] # list of enzyme Pobjects that appear throughtout the P system
 
     def runSimulationStep(self):
         """Runs 1 simulation step consisting of executing one program (production & dispersion functions) for all membranes that have programs
@@ -57,12 +58,27 @@ class NumericalPsystem():
                 continue
             logging.debug("Production for membrane %s" % membraneName)
 
-            membrane.chosenProgramNr = 0 if len(membrane.programs) == 1 else random.randint(0, len(membrane.programs) - 1)
+            # if this membrane does not use enzymes
+            if (len(membrane.enzymes) == 0):
+                membrane.chosenProgramNr = 0 if len(membrane.programs) == 1 else random.randint(0, len(membrane.programs) - 1)
+            else:
+                if len(membrane.programs) == 1:
+                    membrane.chosenProgramNr = [0]
+                else:
+                    membrane.chosenProgramNr = []
+                    for prgNr, prg in enumerate(membrane.programs):
+                        if (prg.isActivatedByEnzyme()):
+                            logging.debug("Program %d activated by enzyme %s" % (prgNr, prg.enzyme.name))
+                            membrane.chosenProgramNr.append(prgNr)
             try:
-                # produce a new value
-                membrane.newValue = membrane.programs[membrane.chosenProgramNr].prodFunction.evaluate()
+                # if this membrane does not use enzymes
+                if (len(membrane.enzymes) == 0):
+                    # produce a new value
+                    membrane.newValue = membrane.programs[membrane.chosenProgramNr].prodFunction.evaluate()
+                else:
+                    membrane.newValue = [membrane.programs[prgNr].prodFunction.evaluate() for prgNr in membrane.chosenProgramNr ]
             except RuntimeError:
-                logging.error("Error encountered during production function of membrane %s, program %d" % (membraneName, membrane.chosenProgramNr))
+                logging.error("Error encountered during production function of membrane %s, program %s" % (membraneName, membrane.chosenProgramNr))
                 # re-raise the exception to stop the simulator
                 raise
 
@@ -71,17 +87,39 @@ class NumericalPsystem():
         for variable in self.variables:
             if (variable.isPartOfProductionFunction):
                 variable.value = 0
+        ## reset enzymes phase
+        logging.debug("Resetting all enzymes that are part of production functions to 0")
+        for enzyme in self.enzymes:
+            if (enzyme.isPartOfProductionFunction):
+                enzyme.value = 0
 
         # distribution phase for all membranes
         for membraneName in self.H:
             membrane = self.membranes[membraneName]
             if (len(membrane.programs) < 1):
                 continue
-            logging.debug("Distribution for membrane %s of unitary value %.02f" % (
-                membraneName,
-                membrane.newValue / membrane.programs[membrane.chosenProgramNr].distribFunction.proportionTotal))
-            # distribute the previously produced value
-            membrane.programs[membrane.chosenProgramNr].distribFunction.distribute(membrane.newValue)
+            # if this membrane uses enzymes (that allow multiple program execution)
+            # and no program is active
+            elif (type(membrane.chosenProgramNr) == list and len(membrane.chosenProgramNr) == 0):
+                continue
+
+            # if this membrane does not use enzymes
+            if (type(membrane.chosenProgramNr) == int):
+                logging.debug("Distribution for membrane %s of unitary value %.02f" % (
+                    membraneName,
+                    membrane.newValue / membrane.programs[membrane.chosenProgramNr].distribFunction.proportionTotal))
+                # distribute the previously produced value
+                membrane.programs[membrane.chosenProgramNr].distribFunction.distribute(membrane.newValue)
+
+            # if this membrane uses enzymes (that allow multiple program execution)
+            elif (type(membrane.chosenProgramNr) == list):
+                for i in membrane.chosenProgramNr:
+                    logging.debug("Distribution for membrane %s program %d of unitary value %.02f" % (
+                        membraneName,
+                        membrane.chosenProgramNr[i],
+                        membrane.newValue[i] / membrane.programs[membrane.chosenProgramNr[i]].distribFunction.proportionTotal))
+                    # distribute the previously produced value
+                    membrane.programs[membrane.chosenProgramNr[i]].distribFunction.distribute(membrane.newValue[i])
         logging.info("Simulation step finished succesfully")
     # end runSimulationStep()
 
@@ -166,9 +204,13 @@ class Membrane():
     def __init__(self, parentMembrane = None):
         self.variables = [] # array of P objects
         self.programs = [] # list of Program objects
-        self.chosenProgramNr = 0 # the program nr that was chosen for execution
-        self.newValue = 0 # the value that was produced during the previous production phase
-        self.enzymes = [] # array of P objects
+        # the program nr that was chosen for execution
+        # OR array of chosen program numbers when enzymes are used
+        self.chosenProgramNr = 0
+        # the value that was produced during the previous production phase
+        # OR array of values when using enzymes
+        self.newValue = 0
+        self.enzymes = [] # array of enzyme P objects
         self.parent = parentMembrane # parent membrane (Membrane object)
         self.children = {} # map (dictioanry) between String membrane_name: Membrane object
 
@@ -185,7 +227,12 @@ class Membrane():
 
         result += "var = {"
         for var in self.variables:
-            result += " %s: %s, " % (var.name, var.value)
+            result += " %s: %.2f, " % (var.name, var.value)
+        result += "}\n"
+
+        result += " " * indentSpaces + "E = {"
+        for enz in self.enzymes:
+            result += " %s: %.2f, " % (enz.name, enz.value)
         result += "}\n"
 
         if (withPrograms):
@@ -206,6 +253,7 @@ class Program():
     def __init__(self):
         self.prodFunction = None # ProductionFunction object
         self.distribFunction = None # DistributionFunction object
+        self.enzyme = None # Pobject if an enzyme is used for this program
 
     def print(self, indentSpaces = 2, toString = False) :
         """Print a program with a given indentation level
@@ -214,13 +262,37 @@ class Program():
         :toString: write to a string instead of stdout
         :returns: string print of the rule if toString = True otherwise returns None """
 
-        result = " " * indentSpaces + self.prodFunction.infixExpression + "  ->  " + self.distribFunction.expression
+        enzymeCondition = "  ->  " if type(self.enzyme) != Pobject else "  [" +self.enzyme.name + " -> ]  "
+        result = " " * indentSpaces + self.prodFunction.infixExpression + enzymeCondition + self.distribFunction.expression
 
         if (toString):
             return result
         else:
             print(result)
     # end print()
+
+    def isActivatedByEnzyme(self):
+        """Checks whether the production function activation condition Enzyme > min(PROD_FUNCTION_VARIABLES) is true
+        :returns: True / False"""
+
+        minVarValue = None
+        for prodItem in self.prodFunction.items:
+            # only P object variables are considered
+            if (type(prodItem) == Pobject):
+                if (minVarValue == None or minVarValue > prodItem.value):
+                    minVarValue = prodItem.value
+
+        # no variables are present in the production function
+        # so the production function is active
+        if (minVarValue == None):
+            return True
+
+        # the activation condition holds
+        if (self.enzyme.value > minVarValue):
+            return True
+
+        return False
+    # end isActivatedByEnzyme()
 
 # end class Program
 
@@ -512,6 +584,12 @@ def process_tokens(tokens, parent, index):
                     for var in variables:
                         result.variables.append(Pobject(name = var))
 
+                elif (prev_token.value == 'E'):
+                    logging.info("building enzyme list");
+                    index, enzymes = process_tokens(tokens, list(), index + 1);
+                    for enz in enzymes:
+                        result.enzymes.append(Pobject(name = enz))
+
                 elif (prev_token.value == 'pr'):
                     logging.info("building Program");
                     index, program = process_tokens(tokens, Program(), index + 1);
@@ -523,6 +601,12 @@ def process_tokens(tokens, parent, index):
                     for i, var in enumerate(variables):
                         result.variables[i].value = var
 
+                elif (prev_token.value == 'E0'):
+                    logging.info("building E0 list");
+                    index, enzymes = process_tokens(tokens, list(), index + 1);
+                    for i, enz in enumerate(enzymes):
+                        result.enzymes[i].value = enz
+
                 else:
                     raise RuntimeError("Unexpected token '%s' on line %d" % (token.value, token.line))
         # end if parent == Membrane
@@ -532,10 +616,21 @@ def process_tokens(tokens, parent, index):
 
             if (token.type == 'L_CURLY_BRACE'):
                 logging.info("building production function");
-                index, prodFunction = process_tokens(tokens, ProductionFunction(), index + 1);
-                result.prodFunction = prodFunction
+                index, result.prodFunction = process_tokens(tokens, ProductionFunction(), index + 1);
 
-            elif (token.type == 'PROD_DISTRIB_SEPARATOR'):
+            elif (token.type == 'L_BRACKET'):
+                logging.info("storing enzyme required by program");
+                if (tokens[index + 1].type == 'ID'):
+                    # storing enzyme as string for now, will be referenced later to a Pobject
+                    result.enzyme = tokens[index + 1].value
+                    index += 2
+                else:
+                    raise RuntimeError("Unexpected token '%s' on line %d" % (token.value, token.line))
+
+
+            # build a distribution rule if the PROD_DISTRIB_SEPARATOR '|' is reached for a non-enzymatic program or R_BRACKET ']' is reached for an enzymatic program
+            elif ((token.type == 'PROD_DISTRIB_SEPARATOR' and result.enzyme == None)
+                    or (token.type == 'R_BRACKET' and type(result.enzyme) == str)):
                 logging.info("building distribution rule");
                 index, result.distribFunction = process_tokens(tokens, DistributionFunction(), index + 1);
 
@@ -554,7 +649,7 @@ def process_tokens(tokens, parent, index):
         elif (type(parent) == ProductionFunction):
             logging.debug("processing as ProductionFunction")
             # construct a string representation of the expression (in infix form)
-            if (token.type != 'PROD_DISTRIB_SEPARATOR'):
+            if (token.type != 'PROD_DISTRIB_SEPARATOR' and token.type != 'L_BRACKET'):
                 result.infixExpression += " " + token.value
 
             if (token.type == 'NUMBER'):
@@ -591,14 +686,14 @@ def process_tokens(tokens, parent, index):
                 result.postfixStack, newOutputList = processPostfixOperator(result.postfixStack, currentOperator)
                 result.items.extend(newOutputList)
 
-            elif (token.type == 'PROD_DISTRIB_SEPARATOR'):
+            elif (token.type == 'PROD_DISTRIB_SEPARATOR' or token.type == 'L_BRACKET'):
                 logging.debug("production function end; emptying stack")
                 # pop all elements in the stack
                 while (len(result.postfixStack) > 0):
                     result.items.append(result.postfixStack.pop())
                 logging.info("finished the production function with result = %s" % result.items)
                 result.infixExpression = result.infixExpression[1:] # strip the first character (leading space)
-                # the Program should also see PROD_DISTRIB_SEPARATOR in order to trigger the build of a distribution function
+                # the Program should also see PROD_DISTRIB_SEPARATOR or L_BRACKET in order to trigger the build of a distribution function or to store an enzyme for this program
                 return index-1, result;
 
             elif (token.type == 'L_CURLY_BRACE'):
@@ -669,10 +764,10 @@ def process_tokens(tokens, parent, index):
             if (token.type == 'ID'):
                 result.append(token.value);
 
-            elif (token.type == 'ID' or token.type == 'NUMBER'):
+            elif (token.type == 'NUMBER'):
                 result.append(int(token.value));
 
-            elif (token.type == 'ID' or token.type == 'NUMBER_FLOAT'):
+            elif (token.type == 'NUMBER_FLOAT'):
                 result.append(float(token.value));
 
         elif (type(parent) == str):
@@ -726,7 +821,14 @@ def readInputFile(filename, printTokens = False):
             if var not in system.variables:
                 system.variables.append(var)
 
-    logging.debug("cross-referencing string identifiers to the corresponding Pobject instance")
+
+    logging.debug("constructing a global list of enzymes used in the entire P system")
+    for membrane in system.membranes.values():
+        for enz in membrane.enzymes:
+            if enz not in system.enzymes:
+                system.enzymes.append(enz)
+
+    logging.debug("cross-referencing string identifiers of VARIABLES to the corresponding Pobject instance")
     # cross-reference string identifiers with references to Pobject instances
     for var in system.variables:
         for (membrane_name, membrane) in system.membranes.items():
@@ -746,6 +848,31 @@ def readInputFile(filename, printTokens = False):
                         logging.debug("replacing '%s' in distribution function" % distribRule.variable)
                         # string value is replaced with a Pobject reference
                         distribRule.variable = var
+
+    logging.debug("cross-referencing string identifiers of ENZYMES to the corresponding Pobject instance")
+    # cross-reference string identifiers with references to Pobject instances
+    for enz in system.enzymes:
+        for (membrane_name, membrane) in system.membranes.items():
+            logging.debug("processing membrane %s" % membrane_name)
+            for prg_nr, pr in enumerate(membrane.programs):
+                # replace the program enzyme name with reference
+                if (enz.name == pr.enzyme):
+                    logging.debug("replacing '%s' as program %d enzyme" % (enz.name, prg_nr))
+                    pr.enzyme = enz
+                # replacing in production function
+                for i, item in enumerate(pr.prodFunction.items[:]):
+                    if (enz.name == item):
+                        logging.debug("replacing '%s' in production function" % item)
+                        # string value is replaced with a Pobject reference
+                        pr.prodFunction.items[i] = enz
+                        # mark this enzyme as part of a production function
+                        enz.isPartOfProductionFunction = True
+                # replacing in distribution function
+                for i, distribRule in enumerate(pr.distribFunction):
+                    if (enz.name == distribRule.variable):
+                        logging.debug("replacing '%s' in distribution function" % distribRule.variable)
+                        # string value is replaced with a Pobject reference
+                        distribRule.variable = enz
 
     logging.debug("Constructing the internal membrane structure of the P system")
     # construct a tree representation of the P system for use for e.g. in membrane dissolution rules
