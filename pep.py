@@ -1,4 +1,5 @@
-#!/usr/bin/python3
+#!/usr/bin/python2
+from __future__ import print_function, with_statement, division
 
 import collections  # for named tuple && Counter (multisets)
 import re  # for regex
@@ -36,7 +37,7 @@ Token = collections.namedtuple('Token', ['type', 'value', 'line', 'column'])
 ##########################################################################
 # class definitions
 
-class NumericalPsystem():
+class NumericalPsystem(object):
 
     """Numerical P systems class"""
 
@@ -197,7 +198,7 @@ class MembraneStructure(list):
         list.__init__(self)
 # end class MembraneStructure
 
-class Membrane():
+class Membrane(object):
 
     """Membrane class, that can contain other membranes or be part of another membrane"""
 
@@ -246,7 +247,7 @@ class Membrane():
     # end print()
 # end class Membrane
 
-class Program():
+class Program(object):
 
     """Program class"""
 
@@ -296,7 +297,7 @@ class Program():
 
 # end class Program
 
-class ProductionFunction():
+class ProductionFunction(object):
 
     """Production function class that stores expressions using the postfix (reversed polish) form"""
 
@@ -376,7 +377,7 @@ class DistributionFunction(list):
     # end distribute()
 # end class DistributionFunction
 
-class DistributionRule():
+class DistributionRule(object):
 
     """Class for the distribution rules that make up a program, together with the production rules"""
 
@@ -403,7 +404,7 @@ class DistributionRule():
     # end print()
 # end class DistributionRule
 
-class Pobject():
+class Pobject(object):
 
     """Mutable objects that are needed in order to allow all membranes that use the P object to globally modify the object"""
 
@@ -795,7 +796,7 @@ def process_tokens(tokens, parent, index):
         index += 1
     return index, result
 #end process_tokens
-def readInputFile(filename, printTokens = False):
+def readInputFile(filename, printTokens = True):
     """parses the given input file and produces a P system object
 
     :filename: string path to the file that will be parsed
