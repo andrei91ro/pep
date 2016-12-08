@@ -765,10 +765,16 @@ def process_tokens(tokens, parent, index):
                 result.append(token.value);
 
             elif (token.type == 'NUMBER'):
-                result.append(int(token.value));
+                if (prev_token.type == 'OPERATOR_SUBTRACT'):
+                    result.append(-int(token.value));
+                else:
+                    result.append(int(token.value));
 
             elif (token.type == 'NUMBER_FLOAT'):
-                result.append(float(token.value));
+                if (prev_token.type == 'OPERATOR_SUBTRACT'):
+                    result.append(-float(token.value));
+                else:
+                    result.append(float(token.value));
 
         elif (type(parent) == str):
             logging.debug("processing as Str")
