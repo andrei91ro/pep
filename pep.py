@@ -16,11 +16,19 @@ class OperatorType(IntEnum):
 
     left_brace   = 1
     # right brace is never added to the postfix stack
-    add          = 2
-    subtract     = 3
-    multiply     = 4
-    divide       = 5
-    power        = 6
+    eq           = 2 # a == b
+    ne           = 3 # a != b
+    lt           = 4 # a < b
+    le           = 5 # a <= b
+    gt           = 6 # a > b
+    ge           = 7 # a >= b
+    add          = 8
+    subtract     = 9
+    multiply     = 10
+    divide       = 11
+    power        = 12
+
+
 
 # end class OperatorType
 
@@ -29,7 +37,14 @@ dictOperatorTypes = {
         'OPERATOR_SUBTRACT': OperatorType.subtract,
         'OPERATOR_MULTIPLY': OperatorType.multiply,
         'OPERATOR_DIVIDE': OperatorType.divide,
-        'OPERATOR_POWER': OperatorType.power}
+        'OPERATOR_POWER': OperatorType.power,
+        'OPERATOR_EQUAL': OperatorType.eq,
+        'OPERATOR_NOT_EQUAL': OperatorType.ne,
+        'OPERATOR_LESS_THAN': OperatorType.lt,
+        'OPERATOR_LESS_EQUAL': OperatorType.le,
+        'OPERATOR_GREATER_THAN': OperatorType.gt,
+        'OPERATOR_GREATER_EQUAL': OperatorType.ge,
+        }
 
 # tuple used to describe parsed data
 Token = collections.namedtuple('Token', ['type', 'value', 'line', 'column'])
@@ -147,7 +162,7 @@ class NumericalPsystem(object):
                 self.print()
 
             if (stepByStepConfirm):
-                input("Press ENTER to continue")
+                raw_input("Press ENTER to continue") # input raises SyntaxError
 
             # if there is a maximum time limit set and it was exceded
             if ((currentTime >= finalTime) and (maxTime > 0)):
@@ -330,7 +345,7 @@ class ProductionFunction(object):
                 # apply the operator
                 self.postfixStack.append(self.postfixStack.pop() * self.postfixStack.pop())
 
-            # order-dependent operators (-, /, ^) require that the operand order be opposite from that of the stack pop operation
+            # order-dependent operators (-  /  ^  <  <=  >  >=) require that the operand order be opposite from that of the stack pop operation
             elif (item == OperatorType.subtract):
                 op2 = self.postfixStack.pop()
                 op1 = self.postfixStack.pop()
@@ -348,6 +363,42 @@ class ProductionFunction(object):
                 op1 = self.postfixStack.pop()
                 # apply the operator
                 self.postfixStack.append(op1 ** op2)
+
+            elif (item == OperatorType.eq):
+                op2 = self.postfixStack.pop()
+                op1 = self.postfixStack.pop()
+                # apply the operator
+                self.postfixStack.append(int(op1 == op2))
+
+            elif (item == OperatorType.ne):
+                op2 = self.postfixStack.pop()
+                op1 = self.postfixStack.pop()
+                # apply the operator
+                self.postfixStack.append(int(op1 != op2))
+
+            elif (item == OperatorType.lt):
+                op2 = self.postfixStack.pop()
+                op1 = self.postfixStack.pop()
+                # apply the operator
+                self.postfixStack.append(int(op1 < op2))
+
+            elif (item == OperatorType.le):
+                op2 = self.postfixStack.pop()
+                op1 = self.postfixStack.pop()
+                # apply the operator
+                self.postfixStack.append(int(op1 <= op2))
+
+            elif (item == OperatorType.gt):
+                op2 = self.postfixStack.pop()
+                op1 = self.postfixStack.pop()
+                # apply the operator
+                self.postfixStack.append(int(op1 > op2))
+
+            elif (item == OperatorType.ge):
+                op2 = self.postfixStack.pop()
+                op1 = self.postfixStack.pop()
+                # apply the operator
+                self.postfixStack.append(int(op1 >= op2))
 
             logging.debug("postfixStack = %s" % self.postfixStack)
 
@@ -456,9 +507,17 @@ def processPostfixOperator(postfixStack, operator):
 def tokenize(code):
     """ generate a token list of input text
         adapted from https://docs.python.org/3/library/re.html#writing-a-tokenizer"""
+
+    # ORDER MATTERS here: more complex tokens (e.g. >= are checked before >) to avoid incorect parsing
     token_specification = [
         ('NUMBER_FLOAT',  r'\d+\.\d+'),    # Float number
         ('NUMBER',        r'\d+'),         # Integer number
+
+        ('OPERATOR_NOT_EQUAL', r'\!\='),   # Not equal operator (!=)
+        ('OPERATOR_EQUAL', r'\=\='),       # Equal operator (==)
+        ('OPERATOR_LESS_EQUAL', r'\<\='),  # Less or equal operator (<=)
+        ('OPERATOR_GREATER_EQUAL', r'\>\='),# Greater or equal operator (>=)
+
         ('ASSIGN',        r'='),           # Assignment operator '='
         ('END',           r';'),           # Statement terminator ';'
         ('ID',            r'[\w]+'),       # Identifiers
@@ -476,6 +535,9 @@ def tokenize(code):
         ('OPERATOR_MULTIPLY', r'\*'),      # Multiplication operator (*)
         ('OPERATOR_DIVIDE', r'\/'),        # Division operator (/)
         ('OPERATOR_POWER', r'\^'),         # Power operator (^)
+
+        ('OPERATOR_LESS_THAN', r'\<'),     # Less than operator (<)
+        ('OPERATOR_GREATER_THAN', r'\>'),  # Greater than operator (>)
         ('DISTRIBUTION_SIGN',    r'\|'),   # Distribution rule sign '|'
 
         ('NEWLINE',       r'\n'),          # Line endings
@@ -679,7 +741,8 @@ def process_tokens(tokens, parent, index):
                     if (op != OperatorType.left_brace):
                         result.items.append(op)
 
-            elif (token.type in ('OPERATOR_ADD', 'OPERATOR_SUBTRACT', 'OPERATOR_MULTIPLY', 'OPERATOR_DIVIDE', 'OPERATOR_POWER')):
+            elif (token.type in ('OPERATOR_ADD', 'OPERATOR_SUBTRACT', 'OPERATOR_MULTIPLY', 'OPERATOR_DIVIDE', 'OPERATOR_POWER',
+                'OPERATOR_EQUAL', 'OPERATOR_NOT_EQUAL', 'OPERATOR_LESS_THAN', 'OPERATOR_LESS_EQUAL', 'OPERATOR_GREATER_THAN', 'OPERATOR_GREATER_EQUAL')):
                 logging.debug("processing operator %s" % token.value)
                 # current operator as OperatorType enum value
                 currentOperator = dictOperatorTypes[token.type]
