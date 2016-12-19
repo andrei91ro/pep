@@ -734,11 +734,12 @@ def process_tokens(tokens, parent, index):
             elif (token.type == 'R_BRACE'):
                 logging.debug("processing operator %s" % token.value)
                 # pop all elements in the stack up until the left brace and add them to the postfix form
-                while (OperatorType.left_brace in result.postfixStack):
+                while (result.postfixStack[-1] != OperatorType.left_brace):
                     op = result.postfixStack.pop()
-                    # append all popped operators except of left_brace
-                    if (op != OperatorType.left_brace):
-                        result.items.append(op)
+                    # append all popped operators
+                    result.items.append(op)
+                # now that all elements that were above the left_brace were removed, we pop the left_brace (now the top-most element) from the stack
+                result.postfixStack.pop()
 
             elif (token.type in ('OPERATOR_ADD', 'OPERATOR_SUBTRACT', 'OPERATOR_MULTIPLY', 'OPERATOR_DIVIDE', 'OPERATOR_POWER',
                 'OPERATOR_EQUAL', 'OPERATOR_NOT_EQUAL', 'OPERATOR_LESS_THAN', 'OPERATOR_LESS_EQUAL', 'OPERATOR_GREATER_THAN', 'OPERATOR_GREATER_EQUAL')):
