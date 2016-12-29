@@ -7,6 +7,7 @@ from enum import IntEnum # for enumerations (enum from C)
 import logging # for logging functions
 import random # for stochastic chosing of programs
 import time # for time.time()
+import math # for productionFunction evaluation of math functions
 
 ##########################################################################
 # auxiliary definitions
@@ -28,6 +29,30 @@ class OperatorType(IntEnum):
     divide       = 11
     power        = 12
 
+    # trigonometric functions
+    # Functions that end with 'd' use degrees instead of radians
+    sin          = 13
+    sind         = 14
+    asin         = 15
+    asind        = 16
+
+    cos          = 17
+    cosd         = 18
+    acos         = 19
+    acosd        = 20
+
+    tan          = 21
+    tand         = 22
+    atan         = 23
+    atand        = 24
+    atan2        = 25
+    atan2d       = 26
+
+    cot          = 27
+    cotd         = 28
+    acot         = 29
+    acotd        = 30
+
 
 
 # end class OperatorType
@@ -44,6 +69,25 @@ dictOperatorTypes = {
         'OPERATOR_LESS_EQUAL': OperatorType.le,
         'OPERATOR_GREATER_THAN': OperatorType.gt,
         'OPERATOR_GREATER_EQUAL': OperatorType.ge,
+
+        'FUNCTION_SIN': OperatorType.sin,
+        'FUNCTION_SIND': OperatorType.sind,
+        'FUNCTION_ASIN': OperatorType.asin,
+        'FUNCTION_ASIND': OperatorType.asind,
+        'FUNCTION_COS': OperatorType.cos,
+        'FUNCTION_COSD': OperatorType.cosd,
+        'FUNCTION_ACOS': OperatorType.acos,
+        'FUNCTION_ACOSD': OperatorType.acosd,
+        'FUNCTION_TAN': OperatorType.tan,
+        'FUNCTION_TAND': OperatorType.tand,
+        'FUNCTION_ATAN': OperatorType.atan,
+        'FUNCTION_ATAND': OperatorType.atand,
+        'FUNCTION_ATAN2': OperatorType.atan2,
+        'FUNCTION_ATAN2D': OperatorType.atan2d,
+        'FUNCTION_COT': OperatorType.cot,
+        'FUNCTION_COTD': OperatorType.cotd,
+        'FUNCTION_ACOT': OperatorType.acot,
+        'FUNCTION_ACOTD': OperatorType.acotd,
         }
 
 # tuple used to describe parsed data
@@ -336,6 +380,85 @@ class ProductionFunction(object):
             elif (type(item) == Pobject):
                 self.postfixStack.append(item.value)
 
+            # (unary) operators (single parameter functions) require that one value is popped and the result is added back to the stack
+            elif (item == OperatorType.sin):
+                # evaluate the function
+                self.postfixStack.append( math.sin(self.postfixStack.pop()) )
+
+            elif (item == OperatorType.sind):
+                # evaluate the function
+                self.postfixStack.append( math.sin(math.radians(self.postfixStack.pop())) )
+
+            elif (item == OperatorType.asin):
+                # evaluate the function
+                self.postfixStack.append( math.asin(self.postfixStack.pop()) )
+
+            elif (item == OperatorType.asind):
+                # evaluate the function
+                self.postfixStack.append( math.degrees(math.asin(self.postfixStack.pop())) )
+
+            elif (item == OperatorType.cos):
+                # evaluate the function
+                self.postfixStack.append( math.cos(self.postfixStack.pop()) )
+
+            elif (item == OperatorType.cosd):
+                # evaluate the function
+                self.postfixStack.append( math.cos(math.radians(self.postfixStack.pop())) )
+
+            elif (item == OperatorType.acos):
+                # evaluate the function
+                self.postfixStack.append( math.acos(self.postfixStack.pop()) )
+
+            elif (item == OperatorType.acosd):
+                # evaluate the function
+                self.postfixStack.append( math.degrees(math.acos(self.postfixStack.pop())) )
+
+            elif (item == OperatorType.tan):
+                # evaluate the function
+                self.postfixStack.append( math.tan(self.postfixStack.pop()) )
+
+            elif (item == OperatorType.tand):
+                # evaluate the function
+                self.postfixStack.append( math.tan(math.radians(self.postfixStack.pop())) )
+
+            elif (item == OperatorType.atan):
+                # evaluate the function
+                self.postfixStack.append( math.atan(self.postfixStack.pop()) )
+
+            elif (item == OperatorType.atand):
+                # evaluate the function
+                self.postfixStack.append( math.degrees(math.atan(self.postfixStack.pop())) )
+
+            elif (item == OperatorType.cot):
+                # determine cot() from tan()
+                self.postfixStack.append( 1 / math.tan(self.postfixStack.pop()) )
+
+            elif (item == OperatorType.cotd):
+                # evaluate the function
+                # determine cot() from tan()
+                self.postfixStack.append( 1 / math.tan(math.radians(self.postfixStack.pop())) )
+
+            elif (item == OperatorType.acot):
+                # evaluate the function
+                self.postfixStack.append( math.atan(1 / self.postfixStack.pop()) )
+
+            elif (item == OperatorType.acotd):
+                # evaluate the function
+                self.postfixStack.append( math.degrees(math.atan(1 / self.postfixStack.pop())) )
+
+            # order-dependent binary functions require that the operand order be opposite from that of the stack pop operation
+            elif (item == OperatorType.atan2):
+                op2 = self.postfixStack.pop()
+                op1 = self.postfixStack.pop()
+                # apply the operator
+                self.postfixStack.append( math.atan2(op1, op2) )
+
+            elif (item == OperatorType.atan2d):
+                op2 = self.postfixStack.pop()
+                op1 = self.postfixStack.pop()
+                # apply the operator
+                self.postfixStack.append( math.degrees(math.atan2(op1, op2)) )
+
             # (binary) operators require that two values are popped and the result is added back to the stack
             elif (item == OperatorType.add):
                 # apply the operator
@@ -510,6 +633,26 @@ def tokenize(code):
 
     # ORDER MATTERS here: more complex tokens (e.g. >= are checked before >) to avoid incorect parsing
     token_specification = [
+        ('FUNCTION_ASIND',  r'asind'),     # trigonometric function 'asin (x)' with output in degrees
+        ('FUNCTION_ASIN',   r'asin'),      # trigonometric function 'asin (x)' with output in radians
+        ('FUNCTION_SIND',   r'sind'),      # trigonometric function 'sin (x)' with input in degrees
+        ('FUNCTION_SIN',    r'sin'),       # trigonometric function 'sin (x)' with input in radians
+        ('FUNCTION_ACOSD',  r'acosd'),     # trigonometric function 'acos (x)' with output in degrees
+        ('FUNCTION_ACOS',   r'acos'),      # trigonometric function 'acos (x)' with output in radians
+        ('FUNCTION_COSD',   r'cosd'),      # trigonometric function 'cos (x)' with input in degrees
+        ('FUNCTION_COS',    r'cos'),       # trigonometric function 'cos (x)' with input in radians
+        ('FUNCTION_ATAN2D', r'atan2d'),    # trigonometric function 'atan2 (y, x)' with output in degrees
+        ('FUNCTION_ATAN2',  r'atan2'),     # trigonometric function 'atan2 (y, x)' with output in radians
+        ('FUNCTION_ATAND',  r'atand'),     # trigonometric function 'atan (x)' with output in degrees
+        ('FUNCTION_ATAN',   r'atan'),      # trigonometric function 'atan (x)' with output in radians
+        ('FUNCTION_TAND',   r'tand'),      # trigonometric function 'tan (x)' with input in degrees
+        ('FUNCTION_TAN',    r'tan'),       # trigonometric function 'tan (x)' with input in radians
+        ('FUNCTION_ACOTD',  r'acotd'),     # trigonometric function 'acot (x)' with output in degrees
+        ('FUNCTION_ACOT',   r'acot'),      # trigonometric function 'acot (x)' with output in radians
+        ('FUNCTION_COTD',   r'cotd'),      # trigonometric function 'cot (x)' with input in degrees
+        ('FUNCTION_COT',    r'cot'),       # trigonometric function 'cot (x)' with input in radians
+
+
         ('NUMBER_FLOAT',  r'\d+\.\d+'),    # Float number
         ('NUMBER',        r'\d+'),         # Integer number
 
@@ -742,8 +885,7 @@ def process_tokens(tokens, parent, index):
                 # now that all elements that were above the left_brace were removed, we pop the left_brace (now the top-most element) from the stack
                 result.postfixStack.pop()
 
-            elif (token.type in ('OPERATOR_ADD', 'OPERATOR_SUBTRACT', 'OPERATOR_MULTIPLY', 'OPERATOR_DIVIDE', 'OPERATOR_POWER',
-                'OPERATOR_EQUAL', 'OPERATOR_NOT_EQUAL', 'OPERATOR_LESS_THAN', 'OPERATOR_LESS_EQUAL', 'OPERATOR_GREATER_THAN', 'OPERATOR_GREATER_EQUAL')):
+            elif (token.type in dictOperatorTypes.keys()):
                 logging.debug("processing operator %s" % token.value)
                 # current operator as OperatorType enum value
                 currentOperator = dictOperatorTypes[token.type]
