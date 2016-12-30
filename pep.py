@@ -53,7 +53,12 @@ class OperatorType(IntEnum):
     acot         = 29
     acotd        = 30
 
-
+    # generic functions
+    sqrt         = 31
+    abs          = 32
+    log          = 33 # base e (natural) logarithm
+    log10        = 34 # base 10 logarithm
+    log2         = 35 # base 2 logarithm
 
 # end class OperatorType
 
@@ -88,6 +93,12 @@ dictOperatorTypes = {
         'FUNCTION_COTD': OperatorType.cotd,
         'FUNCTION_ACOT': OperatorType.acot,
         'FUNCTION_ACOTD': OperatorType.acotd,
+
+        'FUNCTION_SQRT': OperatorType.sqrt,
+        'FUNCTION_ABS': OperatorType.abs,
+        'FUNCTION_LOG': OperatorType.log,
+        'FUNCTION_LOG10': OperatorType.log10,
+        'FUNCTION_LOG2': OperatorType.log2,
         }
 
 # tuple used to describe parsed data
@@ -446,6 +457,27 @@ class ProductionFunction(object):
                 # evaluate the function
                 self.postfixStack.append( math.degrees(math.atan(1 / self.postfixStack.pop())) )
 
+            elif (item == OperatorType.sqrt):
+                # evaluate the function
+                self.postfixStack.append( math.sqrt(self.postfixStack.pop()) )
+
+            elif (item == OperatorType.abs):
+                # evaluate the function
+                self.postfixStack.append( math.fabs(self.postfixStack.pop()) )
+
+            elif (item == OperatorType.log):
+                # evaluate the function
+                self.postfixStack.append( math.log(self.postfixStack.pop()) )
+
+            elif (item == OperatorType.log10):
+                # evaluate the function
+                self.postfixStack.append( math.log10(self.postfixStack.pop()) )
+
+            elif (item == OperatorType.log2):
+                # evaluate the function
+                # log(x, base)
+                self.postfixStack.append( math.log(self.postfixStack.pop(), 2) )
+
             # order-dependent binary functions require that the operand order be opposite from that of the stack pop operation
             elif (item == OperatorType.atan2):
                 op2 = self.postfixStack.pop()
@@ -652,6 +684,11 @@ def tokenize(code):
         ('FUNCTION_COTD',   r'cotd'),      # trigonometric function 'cot (x)' with input in degrees
         ('FUNCTION_COT',    r'cot'),       # trigonometric function 'cot (x)' with input in radians
 
+        ('FUNCTION_SQRT',   r'sqrt'),      # square root function
+        ('FUNCTION_ABS',    r'abs'),       # absolute value (modulus) function
+        ('FUNCTION_LOG10',  r'log10'),     # base 10 logarithm function
+        ('FUNCTION_LOG2',   r'log2'),      # base 2 logarithm function
+        ('FUNCTION_LOG',    r'log'),       # base e (natural) logarithm function
 
         ('NUMBER_FLOAT',  r'\d+\.\d+'),    # Float number
         ('NUMBER',        r'\d+'),         # Integer number
