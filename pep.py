@@ -133,14 +133,11 @@ class NumericalPsystem(object):
             if (len(membrane.enzymes) == 0):
                 membrane.chosenProgramNr = 0 if len(membrane.programs) == 1 else random.randint(0, len(membrane.programs) - 1)
             else:
-                if len(membrane.programs) == 1:
-                    membrane.chosenProgramNr = [0]
-                else:
-                    membrane.chosenProgramNr = []
-                    for prgNr, prg in enumerate(membrane.programs):
-                        if (prg.isActivatedByEnzyme()):
-                            logging.debug("Program %d activated by enzyme %s" % (prgNr, prg.enzyme.name))
-                            membrane.chosenProgramNr.append(prgNr)
+                membrane.chosenProgramNr = []
+                for prgNr, prg in enumerate(membrane.programs):
+                    if (prg.isActivatedByEnzyme()):
+                        logging.debug("Program %d activated by enzyme %s" % (prgNr, prg.enzyme.name))
+                        membrane.chosenProgramNr.append(prgNr)
             try:
                 # if this membrane does not use enzymes
                 if (len(membrane.enzymes) == 0):
