@@ -152,13 +152,15 @@ class NumericalPsystem():
         ## reset variable phase
         logging.debug("Resetting all variables that are part of production functions to 0")
         for variable in self.variables:
-            if (variable.isPartOfProductionFunction):
+            if (variable.wasConsumed):
                 variable.value = 0
+                variable.wasConsumed = False # if the program it is part of will be executed again, it will be marked as consumed
         ## reset enzymes phase
         logging.debug("Resetting all enzymes that are part of production functions to 0")
         for enzyme in self.enzymes:
-            if (enzyme.isPartOfProductionFunction):
+            if (enzyme.wasConsumed):
                 enzyme.value = 0
+                enzyme.wasConsumed = False # if the program it is part of will be executed again, it will be marked as consumed
 
         # distribution phase for all membranes
         for membraneName in self.H:
@@ -180,7 +182,7 @@ class NumericalPsystem():
 
             # if this membrane uses enzymes (that allow multiple program execution)
             elif (type(membrane.chosenProgramNr) == list):
-                for i in membrane.chosenProgramNr:
+                for i in range(len(membrane.chosenProgramNr)):
                     logging.debug("Distribution for membrane %s program %d of unitary value %.02f" % (
                         membraneName,
                         membrane.chosenProgramNr[i],
@@ -386,6 +388,8 @@ class ProductionFunction():
             # the value of Pobjects is added to the stack
             elif (type(item) == Pobject):
                 self.postfixStack.append(item.value)
+                # mark this Pobject as consummed
+                item.wasConsumed = True
 
             # (unary) operators (single parameter functions) require that one value is popped and the result is added back to the stack
             elif (item == OperatorType.sin):
@@ -613,7 +617,7 @@ class Pobject():
         self.name = name
         self.value = value
         # variables that are part of a production function are reset to 0 before distribution phase
-        self.isPartOfProductionFunction = False
+        self.wasConsumed = False # was consumed in production function
 # end class Pobject
 
 
@@ -1085,8 +1089,6 @@ def readInputFile(filename, printTokens = False):
                         logging.debug("replacing '%s' in production function" % item)
                         # string value is replaced with a Pobject reference
                         pr.prodFunction.items[i] = var
-                        # mark this variable as part of a production function
-                        var.isPartOfProductionFunction = True
                 # replacing in distribution function
                 for i, distribRule in enumerate(pr.distribFunction):
                     if (var.name == distribRule.variable):
@@ -1110,8 +1112,6 @@ def readInputFile(filename, printTokens = False):
                         logging.debug("replacing '%s' in production function" % item)
                         # string value is replaced with a Pobject reference
                         pr.prodFunction.items[i] = enz
-                        # mark this enzyme as part of a production function
-                        enz.isPartOfProductionFunction = True
                 # replacing in distribution function
                 for i, distribRule in enumerate(pr.distribFunction):
                     if (enz.name == distribRule.variable):
