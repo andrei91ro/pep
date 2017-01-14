@@ -116,6 +116,7 @@ class NumericalPsystem():
         self.structure = None # MembraneStructure object (list of structural elements) [1 [2 ]2 ]1
         self.variables = [] # list of Pobjects that appear throughtout the P system
         self.enzymes = [] # list of enzyme Pobjects that appear throughtout the P system
+        self.csvFile = None # file used for Comma Separated Value output
 
     def runSimulationStep(self):
         """Runs 1 simulation step consisting of executing one program (production & dispersion functions) for all membranes that have programs
@@ -205,11 +206,24 @@ class NumericalPsystem():
         startTime = currentTime = time.time();
         finalTime = currentTime + maxTime
 
+        # write initial system state into csv file
+        if (self.csvFile != None):
+            self.csvFile.write("%d, %s, ,%s\n" % (
+                currentStep,
+                ", ".join([str(var.value) for var in system.variables]),
+                ", ".join([str(enz.value) for enz in system.enzymes])))
+
         while (True):
             logging.info("Starting simulation step %d", currentStep)
 
             self.runSimulationStep()
             currentTime = time.time()
+
+            if (self.csvFile != None):
+                self.csvFile.write("%d, %s, ,%s\n" % (
+                        currentStep,
+                        ", ".join([str(var.value) for var in system.variables]),
+                        ", ".join([str(enz.value) for enz in system.enzymes])))
 
             if (printEachSystemState):
                 self.print()
@@ -256,6 +270,17 @@ class NumericalPsystem():
         else:
             print(result)
     # end print()
+
+    def openCsvFile(self):
+        """Opens a .csv (Comma Separated Value) file where the values of all variables and enzymes are printed at each simulation step
+        The output file is named using the pattern pep_DAY-MONTH-YEAR_HOUR-MINUTE-SECOND.csv"""
+        self.csvFile = open("pep_%s.csv" % time.strftime("%d-%m-%Y_%H-%M-%S"), mode="w")
+
+        self.csvFile.write("PeP csv output. Format = STEP_NR VARIABLE_COLUMNS EMPTY_COLUMN ENZYME_COLUMNS\n")
+        self.csvFile.write("step, %s, ,%s\n" % (
+                ", ".join([var.name for var in system.variables]),
+                ", ".join([enz.name for enz in system.enzymes])))
+    # end openCsvFile()
 # end class NumericalPsystem
 
 class MembraneStructure(list):
@@ -1208,6 +1233,9 @@ if (__name__ == "__main__"):
 
     system = readInputFile(sys.argv[1])
 
+    if ("--csv" in sys.argv):
+        system.openCsvFile()
+
 
     if (logLevel <= logging.WARNING):
         # print the structure of the P system
@@ -1215,5 +1243,9 @@ if (__name__ == "__main__"):
 
 
     system.simulate(stepByStepConfirm = step, maxSteps = nrSteps)
+
+    if (system.csvFile != None):
+        logging.info("Wrote csv output file %s" % system.csvFile.name)
+        system.csvFile.close()
 
     print("\n\n");
