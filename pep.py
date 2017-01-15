@@ -117,6 +117,7 @@ class NumericalPsystem(object):
         self.structure = None # MembraneStructure object (list of structural elements) [1 [2 ]2 ]1
         self.variables = [] # list of Pobjects that appear throughtout the P system
         self.enzymes = [] # list of enzyme Pobjects that appear throughtout the P system
+        self.csvFile = None # file used for Comma Separated Value output
 
     def runSimulationStep(self):
         """Runs 1 simulation step consisting of executing one program (production & dispersion functions) for all membranes that have programs
@@ -153,13 +154,15 @@ class NumericalPsystem(object):
         ## reset variable phase
         logging.debug("Resetting all variables that are part of production functions to 0")
         for variable in self.variables:
-            if (variable.isPartOfProductionFunction):
+            if (variable.wasConsumed):
                 variable.value = 0
+                variable.wasConsumed = False # if the program it is part of will be executed again, it will be marked as consumed
         ## reset enzymes phase
         logging.debug("Resetting all enzymes that are part of production functions to 0")
         for enzyme in self.enzymes:
-            if (enzyme.isPartOfProductionFunction):
+            if (enzyme.wasConsumed):
                 enzyme.value = 0
+                enzyme.wasConsumed = False # if the program it is part of will be executed again, it will be marked as consumed
 
         # distribution phase for all membranes
         for membraneName in self.H:
@@ -181,7 +184,7 @@ class NumericalPsystem(object):
 
             # if this membrane uses enzymes (that allow multiple program execution)
             elif (type(membrane.chosenProgramNr) == list):
-                for i in membrane.chosenProgramNr:
+                for i in range(len(membrane.chosenProgramNr)):
                     logging.debug("Distribution for membrane %s program %d of unitary value %.02f" % (
                         membraneName,
                         membrane.chosenProgramNr[i],
@@ -204,11 +207,24 @@ class NumericalPsystem(object):
         startTime = currentTime = time.time();
         finalTime = currentTime + maxTime
 
+        # write initial system state into csv file
+        if (self.csvFile != None):
+            self.csvFile.write("%d, %s, ,%s\n" % (
+                currentStep,
+                ", ".join([str(var.value) for var in system.variables]),
+                ", ".join([str(enz.value) for enz in system.enzymes])))
+
         while (True):
             logging.info("Starting simulation step %d", currentStep)
 
             self.runSimulationStep()
             currentTime = time.time()
+
+            if (self.csvFile != None):
+                self.csvFile.write("%d, %s, ,%s\n" % (
+                        currentStep,
+                        ", ".join([str(var.value) for var in system.variables]),
+                        ", ".join([str(enz.value) for enz in system.enzymes])))
 
             if (printEachSystemState):
                 self.print()
@@ -255,6 +271,17 @@ class NumericalPsystem(object):
         else:
             print(result)
     # end print()
+
+    def openCsvFile(self):
+        """Opens a .csv (Comma Separated Value) file where the values of all variables and enzymes are printed at each simulation step
+        The output file is named using the pattern pep_DAY-MONTH-YEAR_HOUR-MINUTE-SECOND.csv"""
+        self.csvFile = open("pep_%s.csv" % time.strftime("%d-%m-%Y_%H-%M-%S"), mode="w")
+
+        self.csvFile.write("PeP csv output. Format = STEP_NR VARIABLE_COLUMNS EMPTY_COLUMN ENZYME_COLUMNS\n")
+        self.csvFile.write("step, %s, ,%s\n" % (
+                ", ".join([var.name for var in system.variables]),
+                ", ".join([enz.name for enz in system.enzymes])))
+    # end openCsvFile()
 # end class NumericalPsystem
 
 class MembraneStructure(list):
@@ -387,6 +414,8 @@ class ProductionFunction(object):
             # the value of Pobjects is added to the stack
             elif (type(item) == Pobject):
                 self.postfixStack.append(item.value)
+                # mark this Pobject as consummed
+                item.wasConsumed = True
 
             # (unary) operators (single parameter functions) require that one value is popped and the result is added back to the stack
             elif (item == OperatorType.sin):
@@ -615,7 +644,7 @@ class Pobject(object):
         self.name = name
         self.value = value
         # variables that are part of a production function are reset to 0 before distribution phase
-        self.isPartOfProductionFunction = False
+        self.wasConsumed = False # was consumed in production function
 # end class Pobject
 
 
@@ -1087,8 +1116,6 @@ def readInputFile(filename, printTokens = True):
                         logging.debug("replacing '%s' in production function" % item)
                         # string value is replaced with a Pobject reference
                         pr.prodFunction.items[i] = var
-                        # mark this variable as part of a production function
-                        var.isPartOfProductionFunction = True
                 # replacing in distribution function
                 for i, distribRule in enumerate(pr.distribFunction):
                     if (var.name == distribRule.variable):
@@ -1112,8 +1139,6 @@ def readInputFile(filename, printTokens = True):
                         logging.debug("replacing '%s' in production function" % item)
                         # string value is replaced with a Pobject reference
                         pr.prodFunction.items[i] = enz
-                        # mark this enzyme as part of a production function
-                        enz.isPartOfProductionFunction = True
                 # replacing in distribution function
                 for i, distribRule in enumerate(pr.distribFunction):
                     if (enz.name == distribRule.variable):
@@ -1210,6 +1235,9 @@ if (__name__ == "__main__"):
 
     system = readInputFile(sys.argv[1])
 
+    if ("--csv" in sys.argv):
+        system.openCsvFile()
+
 
     if (logLevel <= logging.WARNING):
         # print the structure of the P system
@@ -1217,5 +1245,9 @@ if (__name__ == "__main__"):
 
 
     system.simulate(stepByStepConfirm = step, maxSteps = nrSteps)
+
+    if (system.csvFile != None):
+        logging.info("Wrote csv output file %s" % system.csvFile.name)
+        system.csvFile.close()
 
     print("\n\n");
