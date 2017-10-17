@@ -27,43 +27,45 @@ class OperatorType(IntEnum):
     multiply     = 10
     divide       = 11
     power        = 12
+    negate       = 13
 
     # trigonometric functions
     # Functions that end with 'd' use degrees instead of radians
-    sin          = 13
-    sind         = 14
-    asin         = 15
-    asind        = 16
+    sin          = 14
+    sind         = 15
+    asin         = 16
+    asind        = 17
 
-    cos          = 17
-    cosd         = 18
-    acos         = 19
-    acosd        = 20
+    cos          = 18
+    cosd         = 19
+    acos         = 20
+    acosd        = 21
 
-    tan          = 21
-    tand         = 22
-    atan         = 23
-    atand        = 24
-    atan2        = 25
-    atan2d       = 26
+    tan          = 22
+    tand         = 23
+    atan         = 24
+    atand        = 25
+    atan2        = 26
+    atan2d       = 27
 
-    cot          = 27
-    cotd         = 28
-    acot         = 29
-    acotd        = 30
+    cot          = 28
+    cotd         = 29
+    acot         = 30
+    acotd        = 31
 
     # generic functions
-    sqrt         = 31
-    abs          = 32
-    log          = 33 # base e (natural) logarithm
-    log10        = 34 # base 10 logarithm
-    log2         = 35 # base 2 logarithm
+    sqrt         = 32
+    abs          = 33
+    log          = 34 # base e (natural) logarithm
+    log10        = 35 # base 10 logarithm
+    log2         = 36 # base 2 logarithm
 
 # end class OperatorType
 
 dictOperatorTypes = {
         'OPERATOR_ADD': OperatorType.add,
         'OPERATOR_SUBTRACT': OperatorType.subtract,
+        'OPERATOR_NEGATE': OperatorType.negate,
         'OPERATOR_MULTIPLY': OperatorType.multiply,
         'OPERATOR_DIVIDE': OperatorType.divide,
         'OPERATOR_POWER': OperatorType.power,
@@ -531,6 +533,10 @@ class ProductionFunction():
                 # apply the operator
                 self.postfixStack.append(op1 - op2)
 
+            elif (item == OperatorType.negate):
+                # return the same value but with the sign reversed
+                self.postfixStack.append( -self.postfixStack.pop() )
+
             elif (item == OperatorType.divide):
                 op2 = self.postfixStack.pop()
                 op1 = self.postfixStack.pop()
@@ -736,6 +742,7 @@ def tokenize(code):
         ('PROD_DISTRIB_SEPARATOR', r'->'), # Program production and distribution component separator sign '->'
         ('OPERATOR_ADD', r'\+'),          # Addition operator (+)
         ('OPERATOR_SUBTRACT', r'\-'),         # Subtraction operator (-)
+        ('OPERATOR_NEGATE', r'\~'),         # Subtraction operator (-)
         ('OPERATOR_MULTIPLY', r'\*'),      # Multiplication operator (*)
         ('OPERATOR_DIVIDE', r'\/'),        # Division operator (/)
         ('OPERATOR_POWER', r'\^'),         # Power operator (^)
