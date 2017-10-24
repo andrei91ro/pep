@@ -1219,6 +1219,13 @@ if (__name__ == "__main__"):
 
     if (len(sys.argv) < 2):
         logging.error("Expected input file path as parameter")
+        print("Usage: pep.py PEP_INPUT_FILE [options]")
+        print("    [options] can be:")
+        print("        * -n NR: stop the simulation after NR execution steps")
+        print("        * --step:          step-by-step execution")
+        print("        * --csv:           write a Comma Separated Values (CSV) file that contains the values of all Pobjects at each simulation step")
+        print("        * -v | --debug:    increase verbosity")
+        print("        * -v0 | --error:   decrease verbosity")
         exit(1)
 
     # step by step simulation
