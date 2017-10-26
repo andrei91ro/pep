@@ -14,9 +14,9 @@ where OPTIONS can be:
 If [colorlog](https://pypi.python.org/pypi/colorlog) is installed, then messages will be coloured according to the level of importance.
 
 # Authors
-Andrei George Florea, Cătălin Buiu,
+Andrei George Florea, [Cătălin Buiu](http://catalin.buiu.net)
 
-Department of Automatic Control And Systems Engineering,
+[Department of Automatic Control And Systems Engineering](http://acse.pub.ro),
 
 Politehnica University of Bucharest
 

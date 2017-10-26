@@ -110,15 +110,23 @@ Token = collections.namedtuple('Token', ['type', 'value', 'line', 'column'])
 
 class NumericalPsystem():
 
-    """Numerical P systems class"""
+    """Numerical P systems class
+
+    :ivar array(str) H: array of strings (names of membranes)
+    :ivar dict membranes: map (dictioanry) between String membrane_name: Membrane object
+    :ivar MembraneStructure structure: MembraneStructure object (list of structural elements) [1 [2 ]2 ]1
+    :ivar list(Pobject) variables: list of Pobjects that appear throughtout the P system
+    :ivar list(Pobject) enzymes: list of enzyme Pobjects that appear throughtout the P system
+    :ivar file csvFile: file used for Comma Separated Value output
+    """
 
     def __init__(self):
-        self.H = [] # array of strings (names of membranes)
-        self.membranes = {} # map (dictioanry) between String membrane_name: Membrane object
-        self.structure = None # MembraneStructure object (list of structural elements) [1 [2 ]2 ]1
-        self.variables = [] # list of Pobjects that appear throughtout the P system
-        self.enzymes = [] # list of enzyme Pobjects that appear throughtout the P system
-        self.csvFile = None # file used for Comma Separated Value output
+        self.H = []
+        self.membranes = {}
+        self.structure = None
+        self.variables = []
+        self.enzymes = []
+        self.csvFile = None
 
     def runSimulationStep(self):
         """Runs 1 simulation step consisting of executing one program (production & dispersion functions) for all membranes that have programs
@@ -295,20 +303,27 @@ class MembraneStructure(list):
 
 class Membrane():
 
-    """Membrane class, that can contain other membranes or be part of another membrane"""
+    """Membrane class, that can contain other membranes or be part of another membrane
+
+    :ivar list(Pobject) variables: array of P objects
+    :ivar list(Program) programs: list of Program objects
+    :ivar int|list chosenProgramNr: the program nr that was chosen for execution OR array of chosen program numbers when enzymes are used
+    :ivar double|list(double) newValue: the value that was produced during the previous production phase OR array of values when using enzymes
+    :ivar list(Pobject) enzymes: array of enzyme P objects
+    :ivar Membrane parent: parent membrane (Membrane object)
+    :ivar dict children: map (dictioanry) between String membrane_name: Membrane object
+    """
 
     def __init__(self, parentMembrane = None):
-        self.variables = [] # array of P objects
-        self.programs = [] # list of Program objects
-        # the program nr that was chosen for execution
-        # OR array of chosen program numbers when enzymes are used
+        self.variables = []
+        self.programs = []
+
         self.chosenProgramNr = 0
-        # the value that was produced during the previous production phase
-        # OR array of values when using enzymes
+
         self.newValue = 0
-        self.enzymes = [] # array of enzyme P objects
-        self.parent = parentMembrane # parent membrane (Membrane object)
-        self.children = {} # map (dictioanry) between String membrane_name: Membrane object
+        self.enzymes = []
+        self.parent = parentMembrane
+        self.children = {}
 
 
     def print(self, indentSpaces = 2, toString = False, withPrograms = False) :
@@ -344,12 +359,17 @@ class Membrane():
 
 class Program():
 
-    """Program class"""
+    """Program class
+
+    :ivar ProductionFunction prodFunction: ProductionFunction object
+    :ivar DistributionFunction distribFunction: DistributionFunction object
+    :ivar Pobject enzyme: Pobject if an enzyme is used for this program
+    """
 
     def __init__(self):
-        self.prodFunction = None # ProductionFunction object
-        self.distribFunction = None # DistributionFunction object
-        self.enzyme = None # Pobject if an enzyme is used for this program
+        self.prodFunction = None
+        self.distribFunction = None
+        self.enzyme = None
 
     def print(self, indentSpaces = 2, toString = False) :
         """Print a program with a given indentation level
@@ -394,12 +414,17 @@ class Program():
 
 class ProductionFunction():
 
-    """Production function class that stores expressions using the postfix (reversed polish) form"""
+    """Production function class that stores expressions using the postfix (reversed polish) form
+
+    :ivar str infixExpression: string representation of the original expression from the input file (written in infix form)
+    :ivar list postfixStack: stack of operands and operators (auxiliary for postfix form)
+    :ivar list items: list of operands and operators written in postfix (reverse polish) form
+    """
 
     def __init__(self):
-        self.infixExpression = "" # string representation of the original expression from the input file (written in infix form)
-        self.postfixStack = [] # stack of operands and operators (auxiliary for postfix form)
-        self.items = [] # list of operands and operators written in postfix (reverse polish) form
+        self.infixExpression = ""
+        self.postfixStack = []
+        self.items = []
 
     def evaluate(self):
         """Evaluates the postfix form of a production function and returns the computed value.
@@ -596,13 +621,17 @@ class ProductionFunction():
 
 class DistributionFunction(list):
 
-    """Distribution function class (list of distribution rules)"""
+    """Distribution function class (list of distribution rules)
+
+    :ivar int proportionTotal: the sum of all proportions
+    :ivar str expression: string representation of the distribution function
+    """
 
     def __init__(self):
         """Initialize the underling list used to store rules"""
         list.__init__(self)
         self.proportionTotal = 0
-        self.expression = "" # string representation of the distribution function
+        self.expression = ""
 
     def distribute(self, newValue):
         """Update the variables referenced in the distribution rules according to the specified proportions
@@ -615,11 +644,15 @@ class DistributionFunction(list):
 
 class DistributionRule():
 
-    """Class for the distribution rules that make up a program, together with the production rules"""
+    """Class for the distribution rules that make up a program, together with the production rules
+
+    :ivar int proportion:
+    :ivar Pobject variable:
+    """
 
     def __init__(self):
-        self.proportion = 0 # integer number
-        self.variable = None # P object
+        self.proportion = 0
+        self.variable = None
 
     def print(self, indentSpaces = 2, toString = False) :
         """Print a distribution rule with a given indentation level
@@ -642,13 +675,17 @@ class DistributionRule():
 
 class Pobject():
 
-    """Mutable objects that are needed in order to allow all membranes that use the P object to globally modify the object"""
+    """Mutable objects that are needed in order to allow all membranes that use the P object to globally modify the object
+
+    :ivar str name:
+    :ivar double value:
+    :ivar boolean wasConsumed: was consumed in production function
+    """
 
     def __init__(self, name = '', value = 0):
         self.name = name
         self.value = value
-        # variables that are part of a production function are reset to 0 before distribution phase
-        self.wasConsumed = False # was consumed in production function
+        self.wasConsumed = False
 # end class Pobject
 
 
