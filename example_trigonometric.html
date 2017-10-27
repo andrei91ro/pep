@@ -1,0 +1,376 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Trigonometric functions &mdash; PeP (Enzymatic) Numerical P System simulator 1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="PeP (Enzymatic) Numerical P System simulator 1.1 documentation" href="index.html"/>
+        <link rel="up" title="Examples" href="examples.html"/>
+        <link rel="next" title="Generic functions" href="example_generic_func.html"/>
+        <link rel="prev" title="Using Enzymes" href="example_enzymatic.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> PeP (Enzymatic) Numerical P System simulator
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pep_syntax_reference.html">PeP input file syntax reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="examples.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="example_paun.html">An initial example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example_enzymatic.html">Using Enzymes</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Trigonometric functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example_generic_func.html">Generic functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example_debugging.html">More details</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">PeP (Enzymatic) Numerical P System simulator</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="examples.html">Examples</a> &raquo;</li>
+        
+      <li>Trigonometric functions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/example_trigonometric.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="trigonometric-functions">
+<h1>Trigonometric functions<a class="headerlink" href="#trigonometric-functions" title="Permalink to this headline">¶</a></h1>
+<p>If trigonometric functions are needed in a certain expression, they can be easily expressed in PeP by using function calls.
+The following trigonometric functions are implemented in PeP</p>
+<blockquote>
+<div><ul class="simple">
+<li>sin, sind, asin, asind</li>
+<li>cos, cosd, acos, acosd</li>
+<li>tan, tand, atan, atand, atan2, atan2d</li>
+<li>cot, cotd, acot, acotd</li>
+</ul>
+</div></blockquote>
+<p>These functions use the same naming convention as that of Matlab/Octave where ‘d’ suffixed functions use degrees whereas the rest use radians.</p>
+<p>The functions are written using the normal syntax: <code class="docutils literal"><span class="pre">function(parameter)</span></code>. Two parameter functions, such as <code class="docutils literal"><span class="pre">atan2</span></code> are called using the following syntax <code class="docutils literal"><span class="pre">function(</span> <span class="pre">(parameter_1)</span> <span class="pre">(parameter_2)</span> <span class="pre">)</span></code>.</p>
+<p>Below there is an example Numerical P System that uses trigonometric functions and can also be found in <code class="docutils literal"><span class="pre">input_files/input_trigonometric_func.pep</span></code></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">num_ps</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># membrane names (labels)</span>
+    <span class="n">H</span> <span class="o">=</span> <span class="p">{</span><span class="n">m1</span><span class="p">,</span> <span class="n">m2</span><span class="p">,</span> <span class="n">m3</span><span class="p">,</span> <span class="n">m4</span><span class="p">,</span> <span class="n">m5</span><span class="p">,</span> <span class="n">m6</span><span class="p">};</span>
+
+    <span class="c1"># test trignonometric functions (Matlab/Octave names):</span>
+    <span class="c1">#   sin, sind, asin, asind</span>
+    <span class="c1">#   cos, cosd, acos, acosd</span>
+    <span class="c1">#   tan, tand, atan, atand, atan2, atan2d</span>
+    <span class="c1">#   cot, cotd, acot, acotd,</span>
+    <span class="n">structure</span> <span class="o">=</span> <span class="p">[</span><span class="n">m1</span> <span class="p">[</span><span class="n">m2</span> <span class="p">]</span><span class="n">m2</span> <span class="p">[</span><span class="n">m3</span> <span class="p">]</span><span class="n">m3</span> <span class="p">[</span><span class="n">m4</span> <span class="p">]</span><span class="n">m4</span> <span class="p">[</span><span class="n">m5</span> <span class="p">]</span><span class="n">m5</span> <span class="p">[</span><span class="n">m6</span> <span class="p">]</span><span class="n">m6</span> <span class="p">]</span><span class="n">m1</span><span class="p">;</span>
+
+    <span class="n">m1</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="p">{</span><span class="n">rez_1</span><span class="p">};</span>
+        <span class="c1"># rez = 5</span>
+        <span class="n">pr</span> <span class="o">=</span> <span class="p">{</span><span class="mi">3</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">sin</span><span class="p">(</span><span class="mf">3.1416</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">rez_1</span> <span class="o">*</span> <span class="mi">0</span> <span class="o">-&gt;</span> <span class="mi">1</span><span class="o">|</span><span class="n">rez_1</span><span class="p">};</span>
+        <span class="n">var0</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="p">};</span>
+
+    <span class="n">m2</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="p">{</span><span class="n">rez_2</span><span class="p">};</span>
+        <span class="c1"># two variable functions like atan2 require variables to be defined within brackets</span>
+        <span class="c1"># atan2 ( (y) (x) )</span>
+        <span class="c1"># rez = -0.9272</span>
+        <span class="n">pr</span> <span class="o">=</span> <span class="p">{</span><span class="n">atan2</span><span class="p">((</span><span class="mi">0</span> <span class="o">-</span> <span class="mi">4</span><span class="p">)</span> <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="n">rez_2</span> <span class="o">*</span> <span class="mi">0</span> <span class="o">-&gt;</span> <span class="mi">1</span><span class="o">|</span><span class="n">rez_2</span><span class="p">};</span>
+        <span class="n">var0</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="p">};</span>
+
+    <span class="n">m3</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="p">{</span><span class="n">rez_3</span><span class="p">};</span>
+        <span class="c1"># rez = 91.556 (0.52360 + 90 + 0.99749 + 0.034899)</span>
+        <span class="n">pr</span> <span class="o">=</span> <span class="p">{</span><span class="n">asin</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">+</span> <span class="n">asind</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">sin</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span> <span class="o">+</span> <span class="n">sind</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">rez_3</span> <span class="o">*</span> <span class="mi">0</span> <span class="o">-&gt;</span> <span class="mi">1</span><span class="o">|</span><span class="n">rez_3</span><span class="p">};</span>
+        <span class="n">var0</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="p">};</span>
+
+    <span class="n">m4</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="p">{</span><span class="n">rez_4</span><span class="p">};</span>
+        <span class="c1"># rez = 2.1173 (1.0472 + 0 + 0.070737 + 0.99939)</span>
+        <span class="n">pr</span> <span class="o">=</span> <span class="p">{</span><span class="n">acos</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">+</span> <span class="n">acosd</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">cos</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span> <span class="o">+</span> <span class="n">cosd</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">rez_4</span> <span class="o">*</span> <span class="mi">0</span> <span class="o">-&gt;</span> <span class="mi">1</span><span class="o">|</span><span class="n">rez_4</span><span class="p">};</span>
+        <span class="n">var0</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="p">};</span>
+
+    <span class="n">m5</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="p">{</span><span class="n">rez_5</span><span class="p">};</span>
+        <span class="c1"># rez = 100.05 (0.46365 + 45 + 14.101 + 0.034921 + 0.64350 + 39.806)</span>
+        <span class="n">pr</span> <span class="o">=</span> <span class="p">{</span><span class="n">atan</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">+</span> <span class="n">atand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">tan</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span> <span class="o">+</span> <span class="n">tand</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">atan2</span><span class="p">(</span> <span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="mi">4</span><span class="p">))</span> <span class="o">+</span> <span class="n">atan2d</span><span class="p">((</span><span class="mi">5</span><span class="p">)</span> <span class="p">(</span><span class="mi">6</span><span class="p">))</span> <span class="o">+</span> <span class="n">rez_5</span> <span class="o">*</span> <span class="mi">0</span> <span class="o">-&gt;</span> <span class="mi">1</span><span class="o">|</span><span class="n">rez_5</span><span class="p">};</span>
+        <span class="n">var0</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="p">};</span>
+
+    <span class="n">m6</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="p">{</span><span class="n">rez_6</span><span class="p">};</span>
+        <span class="c1"># rez = 74.814 (1.1071 + 45 + 0.070915 + 28.636)</span>
+        <span class="n">pr</span> <span class="o">=</span> <span class="p">{</span><span class="n">acot</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">+</span> <span class="n">acotd</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">cot</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span> <span class="o">+</span> <span class="n">cotd</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">rez_6</span> <span class="o">*</span> <span class="mi">0</span> <span class="o">-&gt;</span> <span class="mi">1</span><span class="o">|</span><span class="n">rez_6</span><span class="p">};</span>
+        <span class="n">var0</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="p">};</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The execution of the system can be started using:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">pep</span><span class="o">.</span><span class="n">py</span> <span class="n">input_files</span><span class="o">/</span><span class="n">input_trigonometric_func</span><span class="o">.</span><span class="n">pep</span> <span class="o">-</span><span class="n">n</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>The output of this system is:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">num_ps</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">m1</span><span class="p">:</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">rez_1</span><span class="p">:</span> <span class="mf">0.00</span><span class="p">,</span> <span class="p">}</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">pr_0</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">sin</span> <span class="p">(</span> <span class="mf">3.1416</span> <span class="o">/</span> <span class="mi">2</span> <span class="p">)</span> <span class="o">+</span> <span class="n">rez_1</span> <span class="o">*</span> <span class="mi">0</span>  <span class="o">-&gt;</span>  <span class="mi">1</span><span class="o">|</span><span class="n">rez_1</span> <span class="p">}</span>
+    <span class="n">m2</span><span class="p">:</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">rez_2</span><span class="p">:</span> <span class="mf">0.00</span><span class="p">,</span> <span class="p">}</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">pr_0</span> <span class="o">=</span> <span class="p">{</span> <span class="n">atan2</span> <span class="p">(</span> <span class="p">(</span> <span class="mi">0</span> <span class="o">-</span> <span class="mi">4</span> <span class="p">)</span> <span class="p">(</span> <span class="mi">3</span> <span class="o">*</span> <span class="mi">1</span> <span class="p">)</span> <span class="p">)</span> <span class="o">+</span> <span class="n">rez_2</span> <span class="o">*</span> <span class="mi">0</span>  <span class="o">-&gt;</span>  <span class="mi">1</span><span class="o">|</span><span class="n">rez_2</span> <span class="p">}</span>
+    <span class="n">m3</span><span class="p">:</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">rez_3</span><span class="p">:</span> <span class="mf">0.00</span><span class="p">,</span> <span class="p">}</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">pr_0</span> <span class="o">=</span> <span class="p">{</span> <span class="n">asin</span> <span class="p">(</span> <span class="mf">0.5</span> <span class="p">)</span> <span class="o">+</span> <span class="n">asind</span> <span class="p">(</span> <span class="mi">1</span> <span class="p">)</span> <span class="o">+</span> <span class="n">sin</span> <span class="p">(</span> <span class="mf">1.5</span> <span class="p">)</span> <span class="o">+</span> <span class="n">sind</span> <span class="p">(</span> <span class="mi">2</span> <span class="p">)</span> <span class="o">+</span> <span class="n">rez_3</span> <span class="o">*</span> <span class="mi">0</span>  <span class="o">-&gt;</span>  <span class="mi">1</span><span class="o">|</span><span class="n">rez_3</span> <span class="p">}</span>
+    <span class="n">m4</span><span class="p">:</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">rez_4</span><span class="p">:</span> <span class="mf">0.00</span><span class="p">,</span> <span class="p">}</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">pr_0</span> <span class="o">=</span> <span class="p">{</span> <span class="n">acos</span> <span class="p">(</span> <span class="mf">0.5</span> <span class="p">)</span> <span class="o">+</span> <span class="n">acosd</span> <span class="p">(</span> <span class="mi">1</span> <span class="p">)</span> <span class="o">+</span> <span class="n">cos</span> <span class="p">(</span> <span class="mf">1.5</span> <span class="p">)</span> <span class="o">+</span> <span class="n">cosd</span> <span class="p">(</span> <span class="mi">2</span> <span class="p">)</span> <span class="o">+</span> <span class="n">rez_4</span> <span class="o">*</span> <span class="mi">0</span>  <span class="o">-&gt;</span>  <span class="mi">1</span><span class="o">|</span><span class="n">rez_4</span> <span class="p">}</span>
+    <span class="n">m5</span><span class="p">:</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">rez_5</span><span class="p">:</span> <span class="mf">0.00</span><span class="p">,</span> <span class="p">}</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">pr_0</span> <span class="o">=</span> <span class="p">{</span> <span class="n">atan</span> <span class="p">(</span> <span class="mf">0.5</span> <span class="p">)</span> <span class="o">+</span> <span class="n">atand</span> <span class="p">(</span> <span class="mi">1</span> <span class="p">)</span> <span class="o">+</span> <span class="n">tan</span> <span class="p">(</span> <span class="mf">1.5</span> <span class="p">)</span> <span class="o">+</span> <span class="n">tand</span> <span class="p">(</span> <span class="mi">2</span> <span class="p">)</span> <span class="o">+</span> <span class="n">atan2</span> <span class="p">(</span> <span class="p">(</span> <span class="mi">3</span> <span class="p">)</span> <span class="p">(</span> <span class="mi">4</span> <span class="p">)</span> <span class="p">)</span> <span class="o">+</span> <span class="n">atan2d</span> <span class="p">(</span> <span class="p">(</span> <span class="mi">5</span> <span class="p">)</span> <span class="p">(</span> <span class="mi">6</span> <span class="p">)</span> <span class="p">)</span> <span class="o">+</span> <span class="n">rez_5</span> <span class="o">*</span> <span class="mi">0</span>  <span class="o">-&gt;</span>  <span class="mi">1</span><span class="o">|</span><span class="n">rez_5</span> <span class="p">}</span>
+    <span class="n">m6</span><span class="p">:</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">rez_6</span><span class="p">:</span> <span class="mf">0.00</span><span class="p">,</span> <span class="p">}</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">pr_0</span> <span class="o">=</span> <span class="p">{</span> <span class="n">acot</span> <span class="p">(</span> <span class="mf">0.5</span> <span class="p">)</span> <span class="o">+</span> <span class="n">acotd</span> <span class="p">(</span> <span class="mi">1</span> <span class="p">)</span> <span class="o">+</span> <span class="n">cot</span> <span class="p">(</span> <span class="mf">1.5</span> <span class="p">)</span> <span class="o">+</span> <span class="n">cotd</span> <span class="p">(</span> <span class="mi">2</span> <span class="p">)</span> <span class="o">+</span> <span class="n">rez_6</span> <span class="o">*</span> <span class="mi">0</span>  <span class="o">-&gt;</span>  <span class="mi">1</span><span class="o">|</span><span class="n">rez_6</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">INFO</span>     <span class="n">Starting</span> <span class="n">simulation</span> <span class="n">step</span> <span class="mi">1</span>
+<span class="n">INFO</span>     <span class="n">Simulation</span> <span class="n">step</span> <span class="n">finished</span> <span class="n">succesfully</span>
+<span class="n">num_ps</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="n">m1</span><span class="p">:</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">rez_1</span><span class="p">:</span> <span class="mf">5.00</span><span class="p">,</span> <span class="p">}</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="n">m2</span><span class="p">:</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">rez_2</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.93</span><span class="p">,</span> <span class="p">}</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="n">m3</span><span class="p">:</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">rez_3</span><span class="p">:</span> <span class="mf">91.56</span><span class="p">,</span> <span class="p">}</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="n">m4</span><span class="p">:</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">rez_4</span><span class="p">:</span> <span class="mf">2.12</span><span class="p">,</span> <span class="p">}</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="n">m5</span><span class="p">:</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">rez_5</span><span class="p">:</span> <span class="mf">100.05</span><span class="p">,</span> <span class="p">}</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="n">m6</span><span class="p">:</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">rez_6</span><span class="p">:</span> <span class="mf">74.81</span><span class="p">,</span> <span class="p">}</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Notice that only the initial and first step states are shown. This is because the value of the six P objects does not change after the first execution step, due to the use of each P object in a production function.</p>
+<p>Also, the P object values that are printed by the simulator are not always precisely equal to those obtained in other mathematical software. The reason is that during the printing of each value, these are rounded to the nearest 2 digit value. The internal calculations are always done using <em>double</em> precision floating point values.</p>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="example_generic_func.html" class="btn btn-neutral float-right" title="Generic functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="example_enzymatic.html" class="btn btn-neutral" title="Using Enzymes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Andrei George Florea, Cătălin Buiu.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

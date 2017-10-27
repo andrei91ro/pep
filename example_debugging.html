@@ -1,0 +1,677 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>More details &mdash; PeP (Enzymatic) Numerical P System simulator 1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="PeP (Enzymatic) Numerical P System simulator 1.1 documentation" href="index.html"/>
+        <link rel="up" title="Examples" href="examples.html"/>
+        <link rel="next" title="API Reference" href="api.html"/>
+        <link rel="prev" title="Generic functions" href="example_generic_func.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> PeP (Enzymatic) Numerical P System simulator
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pep_syntax_reference.html">PeP input file syntax reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="examples.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="example_paun.html">An initial example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example_enzymatic.html">Using Enzymes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example_trigonometric.html">Trigonometric functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example_generic_func.html">Generic functions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">More details</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">PeP (Enzymatic) Numerical P System simulator</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="examples.html">Examples</a> &raquo;</li>
+        
+      <li>More details</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/example_debugging.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="more-details">
+<h1>More details<a class="headerlink" href="#more-details" title="Permalink to this headline">¶</a></h1>
+<p>Occasionally it may happen that the system is not behaving as expected.
+As in generic computer programming, PeP also offers methods to analyze the execution.</p>
+<p>In this example, the same input file as that used in <a class="reference internal" href="example_paun.html"><span class="doc">An initial example</span></a> will be used (<code class="docutils literal"><span class="pre">input_files/input_example_3.pep</span></code>)</p>
+<p>One debugging tool is the step by step execution, that can be achieved using the <code class="docutils literal"><span class="pre">--step`</span></code> command line parameter.</p>
+<p>The second debugging tool implies the <code class="docutils literal"><span class="pre">-v</span></code> command line parameter that increases the verbosity level.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">pep</span><span class="o">.</span><span class="n">py</span> <span class="n">input_files</span><span class="o">/</span><span class="n">input_example_3</span><span class="o">.</span><span class="n">pep</span> <span class="o">-</span><span class="n">n</span> <span class="mi">1</span> <span class="o">-</span><span class="n">v</span>
+</pre></div>
+</div>
+<p>With this parameter, the output of the simulator becomes:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>INFO     reading input file
+DEBUG    process_tokens (parent_type = &lt;class &#39;NoneType&#39;&gt;, index = 0)
+DEBUG    token = &#39;num_ps&#39;
+DEBUG    processing as GENERAL
+DEBUG    token = &#39;=&#39;
+DEBUG    processing as GENERAL
+INFO     building NumericalPsystem
+DEBUG    process_tokens (parent_type = &lt;class &#39;__main__.NumericalPsystem&#39;&gt;, index = 2)
+DEBUG    token = &#39;{&#39;
+DEBUG    processing as NumericalPsystem
+DEBUG    token = &#39;H&#39;
+DEBUG    processing as NumericalPsystem
+DEBUG    token = &#39;=&#39;
+DEBUG    processing as NumericalPsystem
+INFO     building membrane list
+DEBUG    process_tokens (parent_type = &lt;class &#39;list&#39;&gt;, index = 5)
+DEBUG    token = &#39;{&#39;
+DEBUG    processing as List
+DEBUG    token = &#39;m1&#39;
+DEBUG    processing as List
+DEBUG    token = &#39;,&#39;
+DEBUG    processing as List
+DEBUG    token = &#39;m2&#39;
+DEBUG    processing as List
+DEBUG    token = &#39;,&#39;
+DEBUG    processing as List
+DEBUG    token = &#39;m3&#39;
+DEBUG    processing as List
+DEBUG    token = &#39;}&#39;
+DEBUG    processing as List
+DEBUG    token = &#39;;&#39;
+DEBUG    processing as List
+DEBUG    finished this block with result = [&#39;m1&#39;, &#39;m2&#39;, &#39;m3&#39;]
+DEBUG    token = &#39;structure&#39;
+DEBUG    processing as NumericalPsystem
+DEBUG    token = &#39;=&#39;
+DEBUG    processing as NumericalPsystem
+INFO     building membrane structure
+DEBUG    process_tokens (parent_type = &lt;class &#39;__main__.MembraneStructure&#39;&gt;, index = 15)
+DEBUG    token = &#39;[&#39;
+DEBUG    processing as MembraneStructure
+DEBUG    token = &#39;m1&#39;
+DEBUG    processing as MembraneStructure
+DEBUG    token = &#39;[&#39;
+DEBUG    processing as MembraneStructure
+DEBUG    token = &#39;m2&#39;
+DEBUG    processing as MembraneStructure
+DEBUG    token = &#39;]&#39;
+DEBUG    processing as MembraneStructure
+DEBUG    token = &#39;m2&#39;
+DEBUG    processing as MembraneStructure
+DEBUG    token = &#39;[&#39;
+DEBUG    processing as MembraneStructure
+DEBUG    token = &#39;m3&#39;
+DEBUG    processing as MembraneStructure
+DEBUG    token = &#39;]&#39;
+DEBUG    processing as MembraneStructure
+DEBUG    token = &#39;m3&#39;
+DEBUG    processing as MembraneStructure
+DEBUG    token = &#39;]&#39;
+DEBUG    processing as MembraneStructure
+DEBUG    token = &#39;m1&#39;
+DEBUG    processing as MembraneStructure
+DEBUG    token = &#39;;&#39;
+DEBUG    processing as MembraneStructure
+DEBUG    finished the MembraneStructure with result = [Token(type=&#39;L_BRACKET&#39;, value=&#39;[&#39;, line=5, column=16), Token(type=&#39;ID&#39;, value=&#39;m1&#39;, line=5, column=17), Token(type=&#39;L_BRACKET&#39;, value=&#39;[&#39;, line=5, column=20), Token(type=&#39;ID&#39;, value=&#39;m2&#39;, line=5, column=21), Token(type=&#39;R_BRACKET&#39;, value=&#39;]&#39;, line=5, column=24), Token(type=&#39;ID&#39;, value=&#39;m2&#39;, line=5, column=25), Token(type=&#39;L_BRACKET&#39;, value=&#39;[&#39;, line=5, column=28), Token(type=&#39;ID&#39;, value=&#39;m3&#39;, line=5, column=29), Token(type=&#39;R_BRACKET&#39;, value=&#39;]&#39;, line=5, column=32), Token(type=&#39;ID&#39;, value=&#39;m3&#39;, line=5, column=33), Token(type=&#39;R_BRACKET&#39;, value=&#39;]&#39;, line=5, column=36), Token(type=&#39;ID&#39;, value=&#39;m1&#39;, line=5, column=37)]
+DEBUG    token = &#39;m1&#39;
+DEBUG    processing as NumericalPsystem
+DEBUG    token = &#39;=&#39;
+DEBUG    processing as NumericalPsystem
+INFO     building Membrane
+DEBUG    process_tokens (parent_type = &lt;class &#39;__main__.Membrane&#39;&gt;, index = 30)
+DEBUG    token = &#39;{&#39;
+DEBUG    processing as Membrane
+DEBUG    token = &#39;var&#39;
+DEBUG    processing as Membrane
+DEBUG    token = &#39;=&#39;
+DEBUG    processing as Membrane
+INFO     building variable list
+DEBUG    process_tokens (parent_type = &lt;class &#39;list&#39;&gt;, index = 33)
+DEBUG    token = &#39;{&#39;
+DEBUG    processing as List
+DEBUG    token = &#39;x_1_1&#39;
+DEBUG    processing as List
+DEBUG    token = &#39;}&#39;
+DEBUG    processing as List
+DEBUG    token = &#39;;&#39;
+DEBUG    processing as List
+DEBUG    finished this block with result = [&#39;x_1_1&#39;]
+DEBUG    token = &#39;var0&#39;
+DEBUG    processing as Membrane
+DEBUG    token = &#39;=&#39;
+DEBUG    processing as Membrane
+INFO     building var0 list
+DEBUG    process_tokens (parent_type = &lt;class &#39;list&#39;&gt;, index = 39)
+DEBUG    token = &#39;(&#39;
+DEBUG    processing as List
+DEBUG    token = &#39;0&#39;
+DEBUG    processing as List
+DEBUG    token = &#39;)&#39;
+DEBUG    processing as List
+DEBUG    token = &#39;;&#39;
+DEBUG    processing as List
+DEBUG    finished this block with result = [0]
+DEBUG    token = &#39;}&#39;
+DEBUG    processing as Membrane
+DEBUG    token = &#39;;&#39;
+DEBUG    processing as Membrane
+DEBUG    finished this block with result = &lt;__main__.Membrane object at 0x7f1bcecfdac8&gt;
+DEBUG    token = &#39;m2&#39;
+DEBUG    processing as NumericalPsystem
+DEBUG    token = &#39;=&#39;
+DEBUG    processing as NumericalPsystem
+INFO     building Membrane
+DEBUG    process_tokens (parent_type = &lt;class &#39;__main__.Membrane&#39;&gt;, index = 47)
+DEBUG    token = &#39;{&#39;
+DEBUG    processing as Membrane
+DEBUG    token = &#39;var&#39;
+DEBUG    processing as Membrane
+DEBUG    token = &#39;=&#39;
+DEBUG    processing as Membrane
+INFO     building variable list
+DEBUG    process_tokens (parent_type = &lt;class &#39;list&#39;&gt;, index = 50)
+DEBUG    token = &#39;{&#39;
+DEBUG    processing as List
+DEBUG    token = &#39;x_1_2&#39;
+DEBUG    processing as List
+DEBUG    token = &#39;}&#39;
+DEBUG    processing as List
+DEBUG    token = &#39;;&#39;
+DEBUG    processing as List
+DEBUG    finished this block with result = [&#39;x_1_2&#39;]
+DEBUG    token = &#39;pr&#39;
+DEBUG    processing as Membrane
+DEBUG    token = &#39;=&#39;
+DEBUG    processing as Membrane
+INFO     building Program
+DEBUG    process_tokens (parent_type = &lt;class &#39;__main__.Program&#39;&gt;, index = 56)
+DEBUG    token = &#39;{&#39;
+DEBUG    processing as Program
+INFO     building production function
+DEBUG    process_tokens (parent_type = &lt;class &#39;__main__.ProductionFunction&#39;&gt;, index = 57)
+DEBUG    token = &#39;2&#39;
+DEBUG    processing as ProductionFunction
+DEBUG    processing integer number
+DEBUG    token = &#39;*&#39;
+DEBUG    processing as ProductionFunction
+DEBUG    processing operator *
+DEBUG    token = &#39;x_1_2&#39;
+DEBUG    processing as ProductionFunction
+DEBUG    processing variable
+DEBUG    token = &#39;+&#39;
+DEBUG    processing as ProductionFunction
+DEBUG    processing operator +
+DEBUG    token = &#39;1&#39;
+DEBUG    processing as ProductionFunction
+DEBUG    processing integer number
+DEBUG    token = &#39;-&gt;&#39;
+DEBUG    processing as ProductionFunction
+DEBUG    production function end; emptying stack
+DEBUG    finished the production function with result = [2, &#39;x_1_2&#39;, &lt;OperatorType.multiply: 10&gt;, 1, &lt;OperatorType.add: 8&gt;]
+DEBUG    token = &#39;-&gt;&#39;
+DEBUG    processing as Program
+INFO     building distribution rule
+DEBUG    process_tokens (parent_type = &lt;class &#39;__main__.DistributionFunction&#39;&gt;, index = 63)
+DEBUG    token = &#39;1&#39;
+DEBUG    processing as DistributionFunction
+DEBUG    token = &#39;|&#39;
+DEBUG    processing as DistributionFunction
+DEBUG    skipped &#39;|&#39;
+DEBUG    token = &#39;x_1_1&#39;
+DEBUG    processing as DistributionFunction
+DEBUG    token = &#39;}&#39;
+DEBUG    processing as DistributionFunction
+DEBUG    finished this DistributionFunction with result = [&lt;__main__.DistributionRule object at 0x7f1bcecfdcc0&gt;]
+DEBUG    token = &#39;;&#39;
+DEBUG    processing as Program
+DEBUG    finished this block with result = &lt;__main__.Program object at 0x7f1bcecfdbe0&gt;
+DEBUG    token = &#39;var0&#39;
+DEBUG    processing as Membrane
+DEBUG    token = &#39;=&#39;
+DEBUG    processing as Membrane
+INFO     building var0 list
+DEBUG    process_tokens (parent_type = &lt;class &#39;list&#39;&gt;, index = 70)
+DEBUG    token = &#39;(&#39;
+DEBUG    processing as List
+DEBUG    token = &#39;0&#39;
+DEBUG    processing as List
+DEBUG    token = &#39;)&#39;
+DEBUG    processing as List
+DEBUG    token = &#39;;&#39;
+DEBUG    processing as List
+DEBUG    finished this block with result = [0]
+DEBUG    token = &#39;}&#39;
+DEBUG    processing as Membrane
+DEBUG    token = &#39;;&#39;
+DEBUG    processing as Membrane
+DEBUG    finished this block with result = &lt;__main__.Membrane object at 0x7f1bcecfdb70&gt;
+DEBUG    token = &#39;m3&#39;
+DEBUG    processing as NumericalPsystem
+DEBUG    token = &#39;=&#39;
+DEBUG    processing as NumericalPsystem
+INFO     building Membrane
+DEBUG    process_tokens (parent_type = &lt;class &#39;__main__.Membrane&#39;&gt;, index = 78)
+DEBUG    token = &#39;{&#39;
+DEBUG    processing as Membrane
+DEBUG    token = &#39;var&#39;
+DEBUG    processing as Membrane
+DEBUG    token = &#39;=&#39;
+DEBUG    processing as Membrane
+INFO     building variable list
+DEBUG    process_tokens (parent_type = &lt;class &#39;list&#39;&gt;, index = 81)
+DEBUG    token = &#39;{&#39;
+DEBUG    processing as List
+DEBUG    token = &#39;x_1_3&#39;
+DEBUG    processing as List
+DEBUG    token = &#39;}&#39;
+DEBUG    processing as List
+DEBUG    token = &#39;;&#39;
+DEBUG    processing as List
+DEBUG    finished this block with result = [&#39;x_1_3&#39;]
+DEBUG    token = &#39;pr&#39;
+DEBUG    processing as Membrane
+DEBUG    token = &#39;=&#39;
+DEBUG    processing as Membrane
+INFO     building Program
+DEBUG    process_tokens (parent_type = &lt;class &#39;__main__.Program&#39;&gt;, index = 87)
+DEBUG    token = &#39;{&#39;
+DEBUG    processing as Program
+INFO     building production function
+DEBUG    process_tokens (parent_type = &lt;class &#39;__main__.ProductionFunction&#39;&gt;, index = 88)
+DEBUG    token = &#39;2&#39;
+DEBUG    processing as ProductionFunction
+DEBUG    processing integer number
+DEBUG    token = &#39;*&#39;
+DEBUG    processing as ProductionFunction
+DEBUG    processing operator *
+DEBUG    token = &#39;(&#39;
+DEBUG    processing as ProductionFunction
+DEBUG    processing operator (
+DEBUG    token = &#39;x_1_3&#39;
+DEBUG    processing as ProductionFunction
+DEBUG    processing variable
+DEBUG    token = &#39;+&#39;
+DEBUG    processing as ProductionFunction
+DEBUG    processing operator +
+DEBUG    token = &#39;1&#39;
+DEBUG    processing as ProductionFunction
+DEBUG    processing integer number
+DEBUG    token = &#39;)&#39;
+DEBUG    processing as ProductionFunction
+DEBUG    processing operator )
+DEBUG    token = &#39;-&gt;&#39;
+DEBUG    processing as ProductionFunction
+DEBUG    production function end; emptying stack
+DEBUG    finished the production function with result = [2, &#39;x_1_3&#39;, 1, &lt;OperatorType.add: 8&gt;, &lt;OperatorType.multiply: 10&gt;]
+DEBUG    token = &#39;-&gt;&#39;
+DEBUG    processing as Program
+INFO     building distribution rule
+DEBUG    process_tokens (parent_type = &lt;class &#39;__main__.DistributionFunction&#39;&gt;, index = 96)
+DEBUG    token = &#39;1&#39;
+DEBUG    processing as DistributionFunction
+DEBUG    token = &#39;|&#39;
+DEBUG    processing as DistributionFunction
+DEBUG    skipped &#39;|&#39;
+DEBUG    token = &#39;x_1_3&#39;
+DEBUG    processing as DistributionFunction
+DEBUG    token = &#39;+&#39;
+DEBUG    processing as DistributionFunction
+DEBUG    skipped &#39;+&#39;
+DEBUG    token = &#39;1&#39;
+DEBUG    processing as DistributionFunction
+DEBUG    token = &#39;|&#39;
+DEBUG    processing as DistributionFunction
+DEBUG    skipped &#39;|&#39;
+DEBUG    token = &#39;x_1_2&#39;
+DEBUG    processing as DistributionFunction
+DEBUG    token = &#39;}&#39;
+DEBUG    processing as DistributionFunction
+DEBUG    finished this DistributionFunction with result = [&lt;__main__.DistributionRule object at 0x7f1bcecfdda0&gt;, &lt;__main__.DistributionRule object at 0x7f1bcecfddd8&gt;]
+DEBUG    token = &#39;;&#39;
+DEBUG    processing as Program
+DEBUG    finished this block with result = &lt;__main__.Program object at 0x7f1bcecfdd30&gt;
+DEBUG    token = &#39;var0&#39;
+DEBUG    processing as Membrane
+DEBUG    token = &#39;=&#39;
+DEBUG    processing as Membrane
+INFO     building var0 list
+DEBUG    process_tokens (parent_type = &lt;class &#39;list&#39;&gt;, index = 107)
+DEBUG    token = &#39;(&#39;
+DEBUG    processing as List
+DEBUG    token = &#39;0&#39;
+DEBUG    processing as List
+DEBUG    token = &#39;)&#39;
+DEBUG    processing as List
+DEBUG    token = &#39;;&#39;
+DEBUG    processing as List
+DEBUG    finished this block with result = [0]
+DEBUG    token = &#39;}&#39;
+DEBUG    processing as Membrane
+DEBUG    token = &#39;;&#39;
+DEBUG    processing as Membrane
+DEBUG    finished this block with result = &lt;__main__.Membrane object at 0x7f1bcecfdcf8&gt;
+DEBUG    token = &#39;}&#39;
+DEBUG    processing as NumericalPsystem
+DEBUG    constructing a global list of variables used in the entire P system
+DEBUG    constructing a global list of enzymes used in the entire P system
+DEBUG    cross-referencing string identifiers of VARIABLES to the corresponding Pobject instance
+DEBUG    processing membrane m1
+DEBUG    processing membrane m2
+DEBUG    replacing &#39;x_1_1&#39; in distribution function
+DEBUG    processing membrane m3
+DEBUG    processing membrane m1
+DEBUG    processing membrane m2
+DEBUG    replacing &#39;x_1_2&#39; in production function
+DEBUG    processing membrane m3
+DEBUG    replacing &#39;x_1_2&#39; in distribution function
+DEBUG    processing membrane m1
+DEBUG    processing membrane m2
+DEBUG    processing membrane m3
+DEBUG    replacing &#39;x_1_3&#39; in production function
+DEBUG    replacing &#39;x_1_3&#39; in distribution function
+DEBUG    cross-referencing string identifiers of ENZYMES to the corresponding Pobject instance
+DEBUG    Constructing the internal membrane structure of the P system
+num_ps = {
+    m1:
+        var = { x_1_1: 0.00, }
+        E = {}
+    m2:
+        var = { x_1_2: 0.00, }
+        E = {}
+        pr_0 = { 2 * x_1_2 + 1  -&gt;  1|x_1_1 }
+    m3:
+        var = { x_1_3: 0.00, }
+        E = {}
+        pr_0 = { 2 * ( x_1_3 + 1 )  -&gt;  1|x_1_3 + 1|x_1_2 }
+}
+
+INFO     Starting simulation step 1
+DEBUG    Production for membrane m2
+DEBUG    postfixStack = [2]
+DEBUG    postfixStack = [2, 0]
+DEBUG    postfixStack = [0]
+DEBUG    postfixStack = [0, 1]
+DEBUG    postfixStack = [1]
+DEBUG    Production for membrane m3
+DEBUG    postfixStack = [2]
+DEBUG    postfixStack = [2, 0]
+DEBUG    postfixStack = [2, 0, 1]
+DEBUG    postfixStack = [2, 1]
+DEBUG    postfixStack = [2]
+DEBUG    Resetting all variables that are part of production functions to 0
+DEBUG    Resetting all enzymes that are part of production functions to 0
+DEBUG    Distribution for membrane m2 of unitary value 1.00
+DEBUG    Distribution for membrane m3 of unitary value 1.00
+INFO     Simulation step finished succesfully
+num_ps = {
+  m1:
+    var = { x_1_1: 1.00, }
+    E = {}
+  m2:
+    var = { x_1_2: 1.00, }
+    E = {}
+  m3:
+    var = { x_1_3: 1.00, }
+    E = {}
+}
+
+INFO     Starting simulation step 2
+DEBUG    Production for membrane m2
+DEBUG    postfixStack = [2]
+DEBUG    postfixStack = [2, 1.0]
+DEBUG    postfixStack = [2.0]
+DEBUG    postfixStack = [2.0, 1]
+DEBUG    postfixStack = [3.0]
+DEBUG    Production for membrane m3
+DEBUG    postfixStack = [2]
+DEBUG    postfixStack = [2, 1.0]
+DEBUG    postfixStack = [2, 1.0, 1]
+DEBUG    postfixStack = [2, 2.0]
+DEBUG    postfixStack = [4.0]
+DEBUG    Resetting all variables that are part of production functions to 0
+DEBUG    Resetting all enzymes that are part of production functions to 0
+DEBUG    Distribution for membrane m2 of unitary value 3.00
+DEBUG    Distribution for membrane m3 of unitary value 2.00
+INFO     Simulation step finished succesfully
+num_ps = {
+  m1:
+    var = { x_1_1: 4.00, }
+    E = {}
+  m2:
+    var = { x_1_2: 2.00, }
+    E = {}
+  m3:
+    var = { x_1_3: 2.00, }
+    E = {}
+}
+</pre></div>
+</div>
+<p>The output now includes DEBUG messages that offer usefull information regarding:</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="first docutils">
+<dt>Input file parsing.</dt>
+<dd>Any input file error will be easy to spot by tracing back the previous messages that show the context of the parsing</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Production function expresion.</dt>
+<dd>The expression is evaluated as a postfix notation (Reverse Polish, RPN) and by watching the <em>postfixStack</em> messages, it is easy to evaluate the correctness of the calculations. <code class="docutils literal"><span class="pre">DEBUG</span>&#160;&#160;&#160; <span class="pre">postfixStack</span> <span class="pre">=</span> <span class="pre">[2,</span> <span class="pre">0]</span></code></dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Distribution function expression</dt>
+<dd>There are messages that show the unitary value that will be distributed from each membrane:<code class="docutils literal"><span class="pre">DEBUG</span>&#160;&#160;&#160; <span class="pre">Distribution</span> <span class="pre">for</span> <span class="pre">membrane</span> <span class="pre">m2</span> <span class="pre">of</span> <span class="pre">unitary</span> <span class="pre">value</span> <span class="pre">1.00</span></code></dd>
+</dl>
+</li>
+<li>[Enzymatic] Numerical P Systems also show a special DEBUG message, <code class="docutils literal"><span class="pre">DEBUG</span>&#160;&#160;&#160; <span class="pre">Program</span> <span class="pre">0</span> <span class="pre">activated</span> <span class="pre">by</span> <span class="pre">enzyme</span> <span class="pre">e_1_1</span></code>,that helps in observing which program was activated by an enzyme at each simulation step.</li>
+</ul>
+</div></blockquote>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="api.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="example_generic_func.html" class="btn btn-neutral" title="Generic functions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Andrei George Florea, Cătălin Buiu.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

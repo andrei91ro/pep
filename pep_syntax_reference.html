@@ -1,0 +1,342 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>PeP input file syntax reference &mdash; PeP (Enzymatic) Numerical P System simulator 1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="PeP (Enzymatic) Numerical P System simulator 1.1 documentation" href="index.html"/>
+        <link rel="next" title="Examples" href="examples.html"/>
+        <link rel="prev" title="Getting Started" href="getting_started.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> PeP (Enzymatic) Numerical P System simulator
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">PeP input file syntax reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#basic-template">Basic template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#enzymatic-numerical-p-system">Enzymatic Numerical P System</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">PeP (Enzymatic) Numerical P System simulator</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>PeP input file syntax reference</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/pep_syntax_reference.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="pep-input-file-syntax-reference">
+<h1>PeP input file syntax reference<a class="headerlink" href="#pep-input-file-syntax-reference" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="basic-template">
+<h2>Basic template<a class="headerlink" href="#basic-template" title="Permalink to this headline">¶</a></h2>
+<p>The basic template of a <em>Numerical P system</em> in PeP is:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">num_ps</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">H</span> <span class="o">=</span> <span class="p">{</span><span class="n">m1</span><span class="p">,</span> <span class="n">m2</span><span class="p">};</span>
+
+    <span class="n">structure</span> <span class="o">=</span> <span class="p">[</span><span class="n">m1</span> <span class="p">[</span><span class="n">m2</span> <span class="p">]</span><span class="n">m2</span> <span class="p">]</span><span class="n">m1</span><span class="p">;</span>
+
+    <span class="n">m1</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="p">{</span><span class="n">x_1</span><span class="p">};</span> <span class="c1"># variables that are part of this membrane</span>
+        <span class="n">pr</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2</span><span class="o">*</span><span class="n">x_1</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-&gt;</span> <span class="mi">1</span><span class="o">|</span><span class="n">x_2</span><span class="p">};</span>
+        <span class="n">var0</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="p">};</span>
+
+    <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>where:</p>
+<blockquote>
+<div><ul>
+<li><p class="first"><code class="docutils literal"><span class="pre">num_ps</span></code>: the name of the P system</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">H</span></code>: a list of membrane names</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">structure</span></code>: describes the structure of the system. In this instance, membrane <em>m2</em> is contained by <em>m1</em></p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">m1</span> <span class="pre">=</span> <span class="pre">{</span> <span class="pre">...</span> <span class="pre">}</span></code>: the definition of membrane <em>m1</em>. Note the name of the membrane is the same as the one defined in <code class="docutils literal"><span class="pre">H</span></code></p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">var</span> <span class="pre">=</span> <span class="pre">{x_1}</span></code>: a comma separated list of P objects that are part of this membrane</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">pr</span> <span class="pre">=</span> <span class="pre">{2*x_1</span> <span class="pre">+</span> <span class="pre">1</span> <span class="pre">-&gt;</span> <span class="pre">1|x_2}</span></code>: the definition of a program. <strong>A single program is allowed per membrane, for a non-enzymatic Numerical P System</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li>The <code class="docutils literal"><span class="pre">pr</span></code> keyword is the same for all programs.</li>
+<li>The right arrow <code class="docutils literal"><span class="pre">-&gt;</span></code> is used to separate the <em>production function</em> (left-side) from the <em>distribution function</em> (right-side)</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">var0</span> <span class="pre">=</span> <span class="pre">(0)</span></code>: a comma separated list of initial P object valuea, specified in the same order as that used for <code class="docutils literal"><span class="pre">var</span></code></p>
+</li>
+<li><p class="first">comments start with <code class="docutils literal"><span class="pre">#</span></code></p>
+</li>
+<li><p class="first">code blocks are delimited using <code class="docutils literal"><span class="pre">{</span>&#160; <span class="pre">}</span></code> and are used for</p>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal"><span class="pre">num_ps</span></code></li>
+<li><code class="docutils literal"><span class="pre">H</span></code></li>
+<li><code class="docutils literal"><span class="pre">m1</span></code></li>
+<li><code class="docutils literal"><span class="pre">var</span></code></li>
+<li><code class="docutils literal"><span class="pre">pr</span></code></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">lists of numeric constants are delimited using <code class="docutils literal"><span class="pre">(</span>&#160; <span class="pre">)</span></code> and are used mainly for <code class="docutils literal"><span class="pre">var0</span></code></p>
+</li>
+</ul>
+</div></blockquote>
+<p>Note that the three suspension dots <code class="docutils literal"><span class="pre">...</span></code> do not have any syntactical meaning.</p>
+</div>
+<div class="section" id="enzymatic-numerical-p-system">
+<h2>Enzymatic Numerical P System<a class="headerlink" href="#enzymatic-numerical-p-system" title="Permalink to this headline">¶</a></h2>
+<p>An <em>Enzymatic Numerical P System</em> preserves all of the syntax elements of a <em>Numerical P System</em> and introduces several small modifications.</p>
+<p>The basic template of an <em>Enzymatic Numerical P system</em> in PeP is:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">num_ps</span> <span class="o">=</span> <span class="p">{</span>
+
+    <span class="o">...</span>
+
+    <span class="n">m3</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="p">{</span><span class="n">x_1_1</span><span class="p">,</span> <span class="n">x_2_1</span><span class="p">,</span> <span class="n">x_3_1</span><span class="p">};</span> <span class="c1"># variables</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="p">{</span><span class="n">e_1_1</span><span class="p">,</span> <span class="n">e_2_1</span><span class="p">};</span> <span class="c1"># enzymes</span>
+        <span class="n">pr</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2</span><span class="o">*</span><span class="n">x_1_1</span> <span class="o">+</span> <span class="n">x_2_1</span> <span class="p">[</span><span class="n">e_1_1</span> <span class="o">-&gt;</span> <span class="p">]</span> <span class="mi">1</span><span class="o">|</span><span class="n">x_2_1</span> <span class="o">+</span> <span class="mi">1</span><span class="o">|</span><span class="n">x_3_1</span> <span class="o">+</span> <span class="mi">1</span><span class="o">|</span><span class="n">x_1_2</span><span class="p">};</span>
+        <span class="n">pr</span> <span class="o">=</span> <span class="p">{</span><span class="n">x_2_1</span> <span class="o">+</span> <span class="mi">3</span><span class="o">*</span><span class="n">x_3_1</span> <span class="p">[</span><span class="n">e_1_1</span> <span class="o">-&gt;</span> <span class="p">]</span> <span class="mi">1</span><span class="o">|</span><span class="n">x_2_1</span> <span class="o">+</span> <span class="mi">2</span><span class="o">|</span><span class="n">x_1_2</span><span class="p">};</span>
+        <span class="n">pr</span> <span class="o">=</span> <span class="p">{</span><span class="n">x_1_1</span> <span class="o">+</span> <span class="mi">4</span><span class="o">*</span><span class="n">x_3_1</span> <span class="p">[</span><span class="n">e_2_1</span> <span class="o">-&gt;</span> <span class="p">]</span> <span class="mi">1</span><span class="o">|</span><span class="n">x_1_1</span> <span class="o">+</span> <span class="mi">2</span><span class="o">|</span><span class="n">x_2_1</span><span class="p">};</span>
+        <span class="n">var0</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span> <span class="c1"># initial values for variables x_1_1, x_2_1, x_3_1</span>
+        <span class="n">E0</span>  <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span> <span class="c1"># initial values for enzymes e_1_1, e_2_1</span>
+    <span class="p">};</span>
+
+    <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Compared to a normal <em>Numerical P System</em>, an <em>Enzymatic Numerical P System</em> introduces the following changes:</p>
+<blockquote>
+<div><ul>
+<li><p class="first"><code class="docutils literal"><span class="pre">E</span> <span class="pre">=</span> <span class="pre">{e_1_1}</span></code>: a comma separated list of P objects that are the enzymes of this membrane</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">E0</span> <span class="pre">=</span> <span class="pre">(0)</span></code>: a comma separated list of initial enzyme P object valuea, specified in the same order as that used for <code class="docutils literal"><span class="pre">E</span></code></p>
+</li>
+<li><p class="first">in what regards programs (<code class="docutils literal"><span class="pre">pr</span></code>)</p>
+<blockquote>
+<div><ul class="simple">
+<li>multiple program definitions (<code class="docutils literal"><span class="pre">pr</span></code>) are allowed</li>
+<li>within the definition of a program, the <code class="docutils literal"><span class="pre">-&gt;</span></code> is replaced with <code class="docutils literal"><span class="pre">[e_1_1</span> <span class="pre">-&gt;</span> <span class="pre">]</span></code> where <code class="docutils literal"><span class="pre">e_1_1</span></code> is the name of an enzyme P object that conditions the execution of this program. <strong>Note that within an Enzymatic Numerical P System, there can be membranes that do not use enzymes</strong>.</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="examples.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="getting_started.html" class="btn btn-neutral" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Andrei George Florea, Cătălin Buiu.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

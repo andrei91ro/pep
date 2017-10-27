@@ -1,0 +1,425 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>An initial example &mdash; PeP (Enzymatic) Numerical P System simulator 1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="PeP (Enzymatic) Numerical P System simulator 1.1 documentation" href="index.html"/>
+        <link rel="up" title="Examples" href="examples.html"/>
+        <link rel="next" title="Using Enzymes" href="example_enzymatic.html"/>
+        <link rel="prev" title="Examples" href="examples.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> PeP (Enzymatic) Numerical P System simulator
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pep_syntax_reference.html">PeP input file syntax reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="examples.html">Examples</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">An initial example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example_enzymatic.html">Using Enzymes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example_trigonometric.html">Trigonometric functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example_generic_func.html">Generic functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example_debugging.html">More details</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">PeP (Enzymatic) Numerical P System simulator</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="examples.html">Examples</a> &raquo;</li>
+        
+      <li>An initial example</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/example_paun.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="an-initial-example">
+<h1>An initial example<a class="headerlink" href="#an-initial-example" title="Permalink to this headline">¶</a></h1>
+<p>This example was initially presented in:</p>
+<blockquote>
+<div><ol class="upperalpha simple" start="7">
+<li>Păun and R. Păun, “Membrane Computing and Economics: Numerical P Systems,” Fundamenta Informaticae, vol. 73, no. 1,2. IOS Press, pp. 213–227, 01-Jan-2006.</li>
+</ol>
+</div></blockquote>
+<p>The PeP input file for this system can also be found at <code class="docutils literal"><span class="pre">input_files/input_example_3.pep</span></code></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">num_ps</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># membrane names (labels)</span>
+    <span class="n">H</span> <span class="o">=</span> <span class="p">{</span><span class="n">m1</span><span class="p">,</span> <span class="n">m2</span><span class="p">,</span> <span class="n">m3</span><span class="p">};</span>
+
+    <span class="n">structure</span> <span class="o">=</span> <span class="p">[</span><span class="n">m1</span> <span class="p">[</span><span class="n">m2</span> <span class="p">]</span><span class="n">m2</span> <span class="p">[</span><span class="n">m3</span> <span class="p">]</span><span class="n">m3</span> <span class="p">]</span><span class="n">m1</span><span class="p">;</span>
+
+    <span class="c1"># membrane 1</span>
+    <span class="n">m1</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="p">{</span><span class="n">x_1_1</span><span class="p">};</span> <span class="c1"># variables used in the production function</span>
+        <span class="c1">#var0 = (15);</span>
+        <span class="n">var0</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="p">};</span>
+
+    <span class="n">m2</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="p">{</span><span class="n">x_1_2</span><span class="p">};</span> <span class="c1"># variables used in the production function</span>
+        <span class="n">pr</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2</span><span class="o">*</span><span class="n">x_1_2</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-&gt;</span> <span class="mi">1</span><span class="o">|</span><span class="n">x_1_1</span><span class="p">};</span>
+        <span class="c1">#var0 = (0.5);</span>
+        <span class="n">var0</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="p">};</span>
+
+    <span class="n">m3</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="p">{</span><span class="n">x_1_3</span><span class="p">};</span> <span class="c1"># variables used in the production function</span>
+        <span class="n">pr</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">x_1_3</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="mi">1</span><span class="o">|</span><span class="n">x_1_3</span> <span class="o">+</span> <span class="mi">1</span><span class="o">|</span><span class="n">x_1_2</span><span class="p">};</span>
+        <span class="c1">#var0 = (12.6);</span>
+        <span class="n">var0</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="p">};</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The following command is used to run this Numerical P system for 5 simulation steps:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">pep</span><span class="o">.</span><span class="n">py</span> <span class="n">input_files</span><span class="o">/</span><span class="n">input_example_3</span><span class="o">.</span><span class="n">pep</span> <span class="o">-</span><span class="n">n</span> <span class="mi">5</span>
+</pre></div>
+</div>
+<p>This 5 step execution produces the following output:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">INFO</span>     <span class="n">reading</span> <span class="nb">input</span> <span class="n">file</span>
+<span class="n">INFO</span>     <span class="n">building</span> <span class="n">NumericalPsystem</span>
+<span class="n">INFO</span>     <span class="n">building</span> <span class="n">membrane</span> <span class="nb">list</span>
+<span class="n">INFO</span>     <span class="n">building</span> <span class="n">membrane</span> <span class="n">structure</span>
+<span class="n">INFO</span>     <span class="n">building</span> <span class="n">Membrane</span>
+<span class="n">INFO</span>     <span class="n">building</span> <span class="n">variable</span> <span class="nb">list</span>
+<span class="n">INFO</span>     <span class="n">building</span> <span class="n">var0</span> <span class="nb">list</span>
+<span class="n">INFO</span>     <span class="n">building</span> <span class="n">Membrane</span>
+<span class="n">INFO</span>     <span class="n">building</span> <span class="n">variable</span> <span class="nb">list</span>
+<span class="n">INFO</span>     <span class="n">building</span> <span class="n">Program</span>
+<span class="n">INFO</span>     <span class="n">building</span> <span class="n">production</span> <span class="n">function</span>
+<span class="n">INFO</span>     <span class="n">building</span> <span class="n">distribution</span> <span class="n">rule</span>
+<span class="n">INFO</span>     <span class="n">building</span> <span class="n">var0</span> <span class="nb">list</span>
+<span class="n">INFO</span>     <span class="n">building</span> <span class="n">Membrane</span>
+<span class="n">INFO</span>     <span class="n">building</span> <span class="n">variable</span> <span class="nb">list</span>
+<span class="n">INFO</span>     <span class="n">building</span> <span class="n">Program</span>
+<span class="n">INFO</span>     <span class="n">building</span> <span class="n">production</span> <span class="n">function</span>
+<span class="n">INFO</span>     <span class="n">building</span> <span class="n">distribution</span> <span class="n">rule</span>
+<span class="n">INFO</span>     <span class="n">building</span> <span class="n">var0</span> <span class="nb">list</span>
+<span class="n">num_ps</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">m1</span><span class="p">:</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">x_1_1</span><span class="p">:</span> <span class="mf">0.00</span><span class="p">,</span> <span class="p">}</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">m2</span><span class="p">:</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">x_1_2</span><span class="p">:</span> <span class="mf">0.00</span><span class="p">,</span> <span class="p">}</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">pr_0</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x_1_2</span> <span class="o">+</span> <span class="mi">1</span>  <span class="o">-&gt;</span>  <span class="mi">1</span><span class="o">|</span><span class="n">x_1_1</span> <span class="p">}</span>
+    <span class="n">m3</span><span class="p">:</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">x_1_3</span><span class="p">:</span> <span class="mf">0.00</span><span class="p">,</span> <span class="p">}</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">pr_0</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span> <span class="n">x_1_3</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">)</span>  <span class="o">-&gt;</span>  <span class="mi">1</span><span class="o">|</span><span class="n">x_1_3</span> <span class="o">+</span> <span class="mi">1</span><span class="o">|</span><span class="n">x_1_2</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">INFO</span>     <span class="n">Starting</span> <span class="n">simulation</span> <span class="n">step</span> <span class="mi">1</span>
+<span class="n">INFO</span>     <span class="n">Simulation</span> <span class="n">step</span> <span class="n">finished</span> <span class="n">succesfully</span>
+<span class="n">num_ps</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="n">m1</span><span class="p">:</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">x_1_1</span><span class="p">:</span> <span class="mf">1.00</span><span class="p">,</span> <span class="p">}</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="n">m2</span><span class="p">:</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">x_1_2</span><span class="p">:</span> <span class="mf">1.00</span><span class="p">,</span> <span class="p">}</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="n">m3</span><span class="p">:</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">x_1_3</span><span class="p">:</span> <span class="mf">1.00</span><span class="p">,</span> <span class="p">}</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="p">}</span>
+
+<span class="n">INFO</span>     <span class="n">Starting</span> <span class="n">simulation</span> <span class="n">step</span> <span class="mi">2</span>
+<span class="n">INFO</span>     <span class="n">Simulation</span> <span class="n">step</span> <span class="n">finished</span> <span class="n">succesfully</span>
+<span class="n">num_ps</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="n">m1</span><span class="p">:</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">x_1_1</span><span class="p">:</span> <span class="mf">4.00</span><span class="p">,</span> <span class="p">}</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="n">m2</span><span class="p">:</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">x_1_2</span><span class="p">:</span> <span class="mf">2.00</span><span class="p">,</span> <span class="p">}</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="n">m3</span><span class="p">:</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">x_1_3</span><span class="p">:</span> <span class="mf">2.00</span><span class="p">,</span> <span class="p">}</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="p">}</span>
+
+<span class="n">INFO</span>     <span class="n">Starting</span> <span class="n">simulation</span> <span class="n">step</span> <span class="mi">3</span>
+<span class="n">INFO</span>     <span class="n">Simulation</span> <span class="n">step</span> <span class="n">finished</span> <span class="n">succesfully</span>
+<span class="n">num_ps</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="n">m1</span><span class="p">:</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">x_1_1</span><span class="p">:</span> <span class="mf">9.00</span><span class="p">,</span> <span class="p">}</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="n">m2</span><span class="p">:</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">x_1_2</span><span class="p">:</span> <span class="mf">3.00</span><span class="p">,</span> <span class="p">}</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="n">m3</span><span class="p">:</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">x_1_3</span><span class="p">:</span> <span class="mf">3.00</span><span class="p">,</span> <span class="p">}</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="p">}</span>
+
+<span class="n">INFO</span>     <span class="n">Starting</span> <span class="n">simulation</span> <span class="n">step</span> <span class="mi">4</span>
+<span class="n">INFO</span>     <span class="n">Simulation</span> <span class="n">step</span> <span class="n">finished</span> <span class="n">succesfully</span>
+<span class="n">num_ps</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="n">m1</span><span class="p">:</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">x_1_1</span><span class="p">:</span> <span class="mf">16.00</span><span class="p">,</span> <span class="p">}</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="n">m2</span><span class="p">:</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">x_1_2</span><span class="p">:</span> <span class="mf">4.00</span><span class="p">,</span> <span class="p">}</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="n">m3</span><span class="p">:</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">x_1_3</span><span class="p">:</span> <span class="mf">4.00</span><span class="p">,</span> <span class="p">}</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="p">}</span>
+
+<span class="n">INFO</span>     <span class="n">Starting</span> <span class="n">simulation</span> <span class="n">step</span> <span class="mi">5</span>
+<span class="n">INFO</span>     <span class="n">Simulation</span> <span class="n">step</span> <span class="n">finished</span> <span class="n">succesfully</span>
+<span class="n">num_ps</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="n">m1</span><span class="p">:</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">x_1_1</span><span class="p">:</span> <span class="mf">25.00</span><span class="p">,</span> <span class="p">}</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="n">m2</span><span class="p">:</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">x_1_2</span><span class="p">:</span> <span class="mf">5.00</span><span class="p">,</span> <span class="p">}</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="n">m3</span><span class="p">:</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">x_1_3</span><span class="p">:</span> <span class="mf">5.00</span><span class="p">,</span> <span class="p">}</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="p">}</span>
+
+<span class="n">WARNING</span>  <span class="n">Maximum</span> <span class="n">number</span> <span class="n">of</span> <span class="n">simulation</span> <span class="n">steps</span> <span class="n">exceeded</span><span class="p">;</span> <span class="n">Simulation</span> <span class="n">stopped</span>
+<span class="n">INFO</span>     <span class="n">Simulation</span> <span class="n">finished</span> <span class="n">succesfully</span> <span class="n">after</span> <span class="mi">5</span> <span class="n">steps</span> <span class="ow">and</span> <span class="mf">0.001450</span> <span class="n">seconds</span><span class="p">;</span> <span class="n">End</span> <span class="n">state</span> <span class="n">below</span><span class="p">:</span>
+<span class="n">num_ps</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="n">m1</span><span class="p">:</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">x_1_1</span><span class="p">:</span> <span class="mf">25.00</span><span class="p">,</span> <span class="p">}</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="n">m2</span><span class="p">:</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">x_1_2</span><span class="p">:</span> <span class="mf">5.00</span><span class="p">,</span> <span class="p">}</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="n">m3</span><span class="p">:</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">x_1_3</span><span class="p">:</span> <span class="mf">5.00</span><span class="p">,</span> <span class="p">}</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Notice that after reading the entire Numerical P system, an initial print of the system, as read from the file, is shown.</p>
+<p>This print contains the programs, P objects and the enzymes of the P system. The initial values of the P objects are also included:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">num_ps</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">m1</span><span class="p">:</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">x_1_1</span><span class="p">:</span> <span class="mf">0.00</span><span class="p">,</span> <span class="p">}</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">m2</span><span class="p">:</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">x_1_2</span><span class="p">:</span> <span class="mf">0.00</span><span class="p">,</span> <span class="p">}</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">pr_0</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x_1_2</span> <span class="o">+</span> <span class="mi">1</span>  <span class="o">-&gt;</span>  <span class="mi">1</span><span class="o">|</span><span class="n">x_1_1</span> <span class="p">}</span>
+    <span class="n">m3</span><span class="p">:</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">x_1_3</span><span class="p">:</span> <span class="mf">0.00</span><span class="p">,</span> <span class="p">}</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">pr_0</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span> <span class="n">x_1_3</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">)</span>  <span class="o">-&gt;</span>  <span class="mi">1</span><span class="o">|</span><span class="n">x_1_3</span> <span class="o">+</span> <span class="mi">1</span><span class="o">|</span><span class="n">x_1_2</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>After finishing each simulation step, a simpler print of the system is shown, where the program contents is excluded.</p>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="example_enzymatic.html" class="btn btn-neutral float-right" title="Using Enzymes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="examples.html" class="btn btn-neutral" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Andrei George Florea, Cătălin Buiu.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

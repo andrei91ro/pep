@@ -1,0 +1,359 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pep.pep.NumericalPsystem &mdash; PeP (Enzymatic) Numerical P System simulator 1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="PeP (Enzymatic) Numerical P System simulator 1.1 documentation" href="../index.html"/>
+        <link rel="up" title="API Reference" href="../api.html"/>
+        <link rel="next" title="pep.pep.Membrane" href="pep.pep.Membrane.html"/>
+        <link rel="prev" title="pep.pep" href="pep.pep.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> PeP (Enzymatic) Numerical P System simulator
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pep_syntax_reference.html">PeP input file syntax reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pep.pep.html">pep.pep</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">pep.pep.NumericalPsystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pep.pep.Membrane.html">pep.pep.Membrane</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pep.pep.MembraneStructure.html">pep.pep.MembraneStructure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pep.pep.Program.html">pep.pep.Program</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pep.pep.ProductionFunction.html">pep.pep.ProductionFunction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pep.pep.DistributionFunction.html">pep.pep.DistributionFunction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pep.pep.DistributionRule.html">pep.pep.DistributionRule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pep.pep.Pobject.html">pep.pep.Pobject</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">PeP (Enzymatic) Numerical P System simulator</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../api.html">API Reference</a> &raquo;</li>
+        
+      <li>pep.pep.NumericalPsystem</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/generated/pep.pep.NumericalPsystem.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="pep-pep-numericalpsystem">
+<h1>pep.pep.NumericalPsystem<a class="headerlink" href="#pep-pep-numericalpsystem" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pep.pep.NumericalPsystem">
+<em class="property">class </em><code class="descclassname">pep.pep.</code><code class="descname">NumericalPsystem</code><a class="reference internal" href="../_modules/pep/pep.html#NumericalPsystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pep.pep.NumericalPsystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Numerical P systems class</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><strong>H</strong> (<em>array</em><em>(</em><em>str</em><em>)</em>) – array of strings (names of membranes)</li>
+<li><strong>membranes</strong> (<em>dict</em>) – map (dictioanry) between String membrane_name: Membrane object</li>
+<li><strong>structure</strong> (<a class="reference internal" href="pep.pep.MembraneStructure.html#pep.pep.MembraneStructure" title="pep.pep.MembraneStructure"><em>MembraneStructure</em></a>) – MembraneStructure object (list of structural elements) [1 [2 ]2 ]1</li>
+<li><strong>variables</strong> (<em>list</em><em>(</em><a class="reference internal" href="pep.pep.Pobject.html#pep.pep.Pobject" title="pep.pep.Pobject"><em>Pobject</em></a><em>)</em>) – list of Pobjects that appear throughtout the P system</li>
+<li><strong>enzymes</strong> (<em>list</em><em>(</em><a class="reference internal" href="pep.pep.Pobject.html#pep.pep.Pobject" title="pep.pep.Pobject"><em>Pobject</em></a><em>)</em>) – list of enzyme Pobjects that appear throughtout the P system</li>
+<li><strong>csvFile</strong> (<em>file</em>) – file used for Comma Separated Value output</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pep.pep.NumericalPsystem.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pep/pep.html#NumericalPsystem.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pep.pep.NumericalPsystem.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#pep.pep.NumericalPsystem.__init__" title="pep.pep.NumericalPsystem.__init__"><code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code></a>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#pep.pep.NumericalPsystem.openCsvFile" title="pep.pep.NumericalPsystem.openCsvFile"><code class="xref py py-obj docutils literal"><span class="pre">openCsvFile</span></code></a>()</td>
+<td>Opens a .csv (Comma Separated Value) file where the values of all variables and enzymes are printed at each simulation step</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#pep.pep.NumericalPsystem.print" title="pep.pep.NumericalPsystem.print"><code class="xref py py-obj docutils literal"><span class="pre">print</span></code></a>([indentSpaces,&nbsp;toString,&nbsp;withPrograms])</td>
+<td>Print the entire Numerical P system with a given indentation level</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#pep.pep.NumericalPsystem.runSimulationStep" title="pep.pep.NumericalPsystem.runSimulationStep"><code class="xref py py-obj docutils literal"><span class="pre">runSimulationStep</span></code></a>()</td>
+<td>Runs 1 simulation step consisting of executing one program (production &amp; dispersion functions) for all membranes that have programs</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#pep.pep.NumericalPsystem.simulate" title="pep.pep.NumericalPsystem.simulate"><code class="xref py py-obj docutils literal"><span class="pre">simulate</span></code></a>([stepByStepConfirm,&nbsp;…])</td>
+<td>Simulates the numericP system until one of the imposed limits is reached</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pep.pep.NumericalPsystem.openCsvFile">
+<code class="descname">openCsvFile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pep/pep.html#NumericalPsystem.openCsvFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pep.pep.NumericalPsystem.openCsvFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Opens a .csv (Comma Separated Value) file where the values of all variables and enzymes are printed at each simulation step
+The output file is named using the pattern pep_DAY-MONTH-YEAR_HOUR-MINUTE-SECOND.csv</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pep.pep.NumericalPsystem.print">
+<code class="descname">print</code><span class="sig-paren">(</span><em>indentSpaces=2</em>, <em>toString=False</em>, <em>withPrograms=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pep/pep.html#NumericalPsystem.print"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pep.pep.NumericalPsystem.print" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the entire Numerical P system with a given indentation level</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">IndentSpaces:</th><td class="field-body">number of spaces used for indentation</td>
+</tr>
+<tr class="field-even field"><th class="field-name">ToString:</th><td class="field-body">write to a string instead of stdout</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">WithPrograms:</th><td class="field-body">print out the programs from each membrane, along with the membrane variables</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">string print of the membrane if toString = True otherwise returns None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pep.pep.NumericalPsystem.runSimulationStep">
+<code class="descname">runSimulationStep</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pep/pep.html#NumericalPsystem.runSimulationStep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pep.pep.NumericalPsystem.runSimulationStep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs 1 simulation step consisting of executing one program (production &amp; dispersion functions) for all membranes that have programs
+If a membrane has more than one program, one is chosen randomly for execution</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pep.pep.NumericalPsystem.simulate">
+<code class="descname">simulate</code><span class="sig-paren">(</span><em>stepByStepConfirm=False</em>, <em>printEachSystemState=True</em>, <em>maxSteps=-1</em>, <em>maxTime=-1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pep/pep.html#NumericalPsystem.simulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pep.pep.NumericalPsystem.simulate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulates the numericP system until one of the imposed limits is reached</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">StepByStepConfirm:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">True / False - whether or not to wait for confirmation before starting the next simulation step</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">PrintEachSystemState:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">True / False - whether or not to print the P system state after the execution ofeach simulation step</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">MaxSteps:</th><td class="field-body">The maximmum number of simulation steps to run</td>
+</tr>
+<tr class="field-even field"><th class="field-name">MaxTime:</th><td class="field-body">The maximum time span that the entire simulation can last</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="pep.pep.Membrane.html" class="btn btn-neutral float-right" title="pep.pep.Membrane" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="pep.pep.html" class="btn btn-neutral" title="pep.pep" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Andrei George Florea, Cătălin Buiu.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
