@@ -878,7 +878,7 @@ def process_tokens(tokens, parent, index):
                 parent.append(token)
 
             elif (token.type == 'END'):
-                logging.info("finished the MembraneStructure with result = %s" % result)
+                logging.debug("finished the MembraneStructure with result = %s" % result)
                 return index, result;
 
             else:
@@ -946,11 +946,11 @@ def process_tokens(tokens, parent, index):
                 index, result.distribFunction = process_tokens(tokens, DistributionFunction(), index + 1);
 
             elif (token.type == 'R_CURLY_BRACE'):
-                logging.info("finished this Program with result = %s" % result)
+                logging.debug("finished this Program with result = %s" % result)
                 return index, result;
 
             elif (token.type == 'END'):
-                logging.info("finished this block with result = %s" % result)
+                logging.debug("finished this block with result = %s" % result)
                 return index, result;
 
             else:
@@ -1003,7 +1003,7 @@ def process_tokens(tokens, parent, index):
                 # pop all elements in the stack
                 while (len(result.postfixStack) > 0):
                     result.items.append(result.postfixStack.pop())
-                logging.info("finished the production function with result = %s" % result.items)
+                logging.debug("finished the production function with result = %s" % result.items)
                 result.infixExpression = result.infixExpression[1:] # strip the first character (leading space)
                 # the Program should also see PROD_DISTRIB_SEPARATOR or L_BRACKET in order to trigger the build of a distribution function or to store an enzyme for this program
                 return index-1, result;
@@ -1055,7 +1055,7 @@ def process_tokens(tokens, parent, index):
                 continue
 
             elif (token.type == 'R_CURLY_BRACE'):
-                logging.info("finished this DistributionFunction with result = %s" % result)
+                logging.debug("finished this DistributionFunction with result = %s" % result)
                 result.expression = result.expression[1:] # strip the first character (leading space)
                 return index, result;
 
@@ -1067,7 +1067,7 @@ def process_tokens(tokens, parent, index):
             logging.debug("processing as DistributionRule")
 
             if (token.type == 'R_CURLY_BRACE'):
-                logging.info("finished this DistributionRule with result = %s" % result)
+                logging.debug("finished this DistributionRule with result = %s" % result)
                 return index, result;
         # end if parent == DistributionRule
 
@@ -1106,7 +1106,7 @@ def process_tokens(tokens, parent, index):
                 index, result = process_tokens(tokens, NumericalPsystem(), index + 1);
 
         if (token.type == 'END'):
-            logging.info("finished this block with result = %s" % result)
+            logging.debug("finished this block with result = %s" % result)
             return index, result;
 
         prev_token = token;
