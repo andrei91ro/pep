@@ -13,6 +13,22 @@ where OPTIONS can be:
 
 If [colorlog](https://pypi.python.org/pypi/colorlog) is installed, then messages will be coloured according to the level of importance.
 
+## Easy start - Docker
+
+In order to simplify the installation procedure, users of Docker can use the `start_pep_docker.sh` script to run pep in a container.
+
+On first run, the pre-built image of Python and PeP will download from the Docker repositories.
+
+The `start_pep_docker.sh` script passes all command-line parameters directly to PeP.
+
+## Documentation
+
+The documentation page, available at [https://andrei91ro.github.io/pep](https://andrei91ro.github.io/pep) contains:
+* getting started
+* input file syntax reference
+* several case studies
+* an API reference
+
 # Authors
 Andrei George Florea, [Cătălin Buiu](http://catalin.buiu.net)
 
