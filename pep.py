@@ -60,6 +60,8 @@ class OperatorType(IntEnum):
     log          = 34 # base e (natural) logarithm
     log10        = 35 # base 10 logarithm
     log2         = 36 # base 2 logarithm
+    min          = 37 # minimum between two numbers
+    max          = 38 # maximum between two numbers
 
 # end class OperatorType
 
@@ -101,6 +103,8 @@ dictOperatorTypes = {
         'FUNCTION_LOG': OperatorType.log,
         'FUNCTION_LOG10': OperatorType.log10,
         'FUNCTION_LOG2': OperatorType.log2,
+        'FUNCTION_MIN': OperatorType.min,
+        'FUNCTION_MAX': OperatorType.max,
         }
 
 # tuple used to describe parsed data
@@ -531,6 +535,14 @@ class ProductionFunction(object):
                 # log(x, base)
                 self.postfixStack.append( math.log(self.postfixStack.pop(), 2) )
 
+            elif (item == OperatorType.min):
+                # evaluate the function
+                self.postfixStack.append( min(self.postfixStack.pop(), self.postfixStack.pop()) )
+
+            elif (item == OperatorType.max):
+                # evaluate the function
+                self.postfixStack.append( max(self.postfixStack.pop(), self.postfixStack.pop()) )
+
             # order-dependent binary functions require that the operand order be opposite from that of the stack pop operation
             elif (item == OperatorType.atan2):
                 op2 = self.postfixStack.pop()
@@ -758,6 +770,8 @@ def tokenize(code):
         ('FUNCTION_LOG10',  r'log10'),     # base 10 logarithm function
         ('FUNCTION_LOG2',   r'log2'),      # base 2 logarithm function
         ('FUNCTION_LOG',    r'log'),       # base e (natural) logarithm function
+        ('FUNCTION_MIN',    r'min'),       # minimum value between two numbers
+        ('FUNCTION_MAX',    r'max'),       # maximum value between two numbers
 
         ('NUMBER_FLOAT',  r'\d+\.\d+'),    # Float number
         ('NUMBER',        r'\d+'),         # Integer number
