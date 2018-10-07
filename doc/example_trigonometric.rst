@@ -12,7 +12,8 @@ The following trigonometric functions are implemented in PeP
 
 These functions use the same naming convention as that of Matlab/Octave where 'd' suffixed functions use degrees whereas the rest use radians.
 
-The functions are written using the normal syntax: ``function(parameter)``. Two parameter functions, such as ``atan2`` are called using the following syntax ``function( (parameter_1) (parameter_2) )``.
+The functions are written using the normal syntax: ``function(parameter)``.
+Two parameter functions, such as ``atan2`` are called using the following syntax ``function( (parameter_1) (parameter_2) )``.
 
 Below there is an example Numerical P System that uses trigonometric functions and can also be found in ``input_files/input_trigonometric_func.pep`` ::
 
