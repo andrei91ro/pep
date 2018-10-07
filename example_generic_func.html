@@ -24,28 +24,19 @@
 
   
 
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="PeP (Enzymatic) Numerical P System simulator 1.1 documentation" href="index.html"/>
-        <link rel="up" title="Examples" href="examples.html"/>
-        <link rel="next" title="More details" href="example_debugging.html"/>
-        <link rel="prev" title="Trigonometric functions" href="example_trigonometric.html"/> 
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="More details" href="example_debugging.html" />
+    <link rel="prev" title="Trigonometric functions" href="example_trigonometric.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -115,7 +106,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">PeP (Enzymatic) Numerical P System simulator</a>
@@ -123,9 +114,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -179,39 +171,48 @@
 <li>log</li>
 <li>log10</li>
 <li>log2</li>
+<li>min</li>
+<li>max</li>
 </ul>
 </div></blockquote>
-<p>An example Numerical P System that uses the previous list of functions can be found in <code class="docutils literal"><span class="pre">input_files/input_generic_func.pep</span></code> and is also shown below:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">num_ps</span> <span class="o">=</span> <span class="p">{</span>
+<p>Two parameter functions, such as <code class="docutils literal notranslate"><span class="pre">min</span></code> and <code class="docutils literal notranslate"><span class="pre">max</span></code> are called using the following syntax <code class="docutils literal notranslate"><span class="pre">function(</span> <span class="pre">(parameter_1)</span> <span class="pre">(parameter_2)</span> <span class="pre">)</span></code>.</p>
+<p>An example Numerical P System that uses the previous list of functions can be found in <code class="docutils literal notranslate"><span class="pre">input_files/input_generic_func.pep</span></code> and is also shown below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">num_ps</span> <span class="o">=</span> <span class="p">{</span>
     <span class="c1"># membrane names (labels)</span>
     <span class="n">H</span> <span class="o">=</span> <span class="p">{</span><span class="n">m1</span><span class="p">,</span> <span class="n">m2</span><span class="p">};</span>
 
     <span class="c1"># test generic functions (Matlab/Octave names):</span>
-    <span class="c1">#   sqrt, abs, log, log10, log2</span>
+    <span class="c1">#   sqrt, abs, log, log10, log2. min, max</span>
     <span class="n">structure</span> <span class="o">=</span> <span class="p">[</span><span class="n">m1</span> <span class="p">[</span><span class="n">m2</span> <span class="p">]</span><span class="n">m2</span> <span class="p">]</span><span class="n">m1</span><span class="p">;</span>
+    <span class="c1">#structure = [m1</span>
+            <span class="c1">#[m2 ]m2</span>
+        <span class="c1">#]m1;</span>
 
+    <span class="c1"># membrane 1</span>
     <span class="n">m1</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">var</span> <span class="o">=</span> <span class="p">{</span><span class="n">rez_1</span><span class="p">};</span>
-        <span class="c1"># rez = 22.935 (3.3166 + 12 + 2.5649 + 1.1461 + 3.9069)</span>
-        <span class="n">pr</span> <span class="o">=</span> <span class="p">{</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span> <span class="o">+</span> <span class="nb">abs</span><span class="p">(</span><span class="mi">0</span> <span class="o">-</span> <span class="mi">12</span><span class="p">)</span> <span class="o">+</span> <span class="n">log</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span> <span class="o">+</span> <span class="n">log10</span><span class="p">(</span><span class="mi">14</span><span class="p">)</span> <span class="o">+</span> <span class="n">log2</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span> <span class="o">+</span> <span class="n">rez_1</span> <span class="o">*</span> <span class="mi">0</span> <span class="o">-&gt;</span> <span class="mi">1</span><span class="o">|</span><span class="n">rez_1</span><span class="p">};</span>
+        <span class="c1"># rez = 27.935 (3.3166 + 12 + 2.5649 + 1.1461 + 3.9069 + 5)</span>
+        <span class="c1"># two variable functions like min require variables to be defined within brackets</span>
+        <span class="n">pr</span> <span class="o">=</span> <span class="p">{</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span> <span class="o">+</span> <span class="nb">abs</span><span class="p">(</span><span class="mi">0</span> <span class="o">-</span> <span class="mi">12</span><span class="p">)</span> <span class="o">+</span> <span class="n">log</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span> <span class="o">+</span> <span class="n">log10</span><span class="p">(</span><span class="mi">14</span><span class="p">)</span> <span class="o">+</span> <span class="n">log2</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span> <span class="o">+</span> <span class="nb">min</span><span class="p">((</span><span class="mi">5</span><span class="p">)</span> <span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="o">+</span> <span class="n">rez_1</span> <span class="o">*</span> <span class="mi">0</span> <span class="o">-&gt;</span> <span class="mi">1</span><span class="o">|</span><span class="n">rez_1</span><span class="p">};</span>
         <span class="n">var0</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">);</span>
     <span class="p">};</span>
 
     <span class="n">m2</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">var</span> <span class="o">=</span> <span class="p">{</span><span class="n">rez_2</span><span class="p">};</span>
-        <span class="c1"># rez = 20.480 (4.6904 + 4 + 2.9444 + 0.84510 + 8)</span>
-        <span class="n">pr</span> <span class="o">=</span> <span class="p">{</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">11</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="nb">abs</span><span class="p">((</span><span class="mi">0</span> <span class="o">-</span> <span class="mi">12</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="n">log</span><span class="p">(</span><span class="mi">13</span> <span class="o">+</span> <span class="mi">6</span><span class="p">)</span> <span class="o">+</span> <span class="n">log10</span><span class="p">(</span><span class="mi">14</span> <span class="o">-</span> <span class="mi">7</span><span class="p">)</span> <span class="o">+</span> <span class="n">log2</span><span class="p">(</span><span class="mi">2</span> <span class="o">^</span> <span class="mi">8</span><span class="p">)</span> <span class="o">+</span> <span class="n">rez_2</span> <span class="o">*</span> <span class="mi">0</span>  <span class="o">-&gt;</span> <span class="mi">1</span><span class="o">|</span><span class="n">rez_2</span><span class="p">};</span>
+        <span class="c1"># rez = 30.480 (4.6904 + 4 + 2.9444 + 0.84510 + 8 + 10)</span>
+        <span class="c1"># two variable functions like max require variables to be defined within brackets</span>
+        <span class="n">pr</span> <span class="o">=</span> <span class="p">{</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">11</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="nb">abs</span><span class="p">((</span><span class="mi">0</span> <span class="o">-</span> <span class="mi">12</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="n">log</span><span class="p">(</span><span class="mi">13</span> <span class="o">+</span> <span class="mi">6</span><span class="p">)</span> <span class="o">+</span> <span class="n">log10</span><span class="p">(</span><span class="mi">14</span> <span class="o">-</span> <span class="mi">7</span><span class="p">)</span> <span class="o">+</span> <span class="n">log2</span><span class="p">(</span><span class="mi">2</span> <span class="o">^</span> <span class="mi">8</span><span class="p">)</span> <span class="o">+</span> <span class="nb">max</span><span class="p">((</span><span class="mi">5</span><span class="p">)</span> <span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="o">+</span> <span class="n">rez_2</span> <span class="o">*</span> <span class="mi">0</span>  <span class="o">-&gt;</span> <span class="mi">1</span><span class="o">|</span><span class="n">rez_2</span><span class="p">};</span>
         <span class="n">var0</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">);</span>
     <span class="p">};</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>The output of the Numerical P System, for a single execution step was obtained after executing the following command:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">pep</span><span class="o">.</span><span class="n">py</span> <span class="n">input_files</span><span class="o">/</span><span class="n">input_generic_func</span><span class="o">.</span><span class="n">pep</span> <span class="o">-</span><span class="n">n</span> <span class="mi">1</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">pep</span><span class="o">.</span><span class="n">py</span> <span class="n">input_files</span><span class="o">/</span><span class="n">input_generic_func</span><span class="o">.</span><span class="n">pep</span> <span class="o">-</span><span class="n">n</span> <span class="mi">1</span>
 </pre></div>
 </div>
 <p>and offers the following output:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">INFO</span>     <span class="n">reading</span> <span class="nb">input</span> <span class="n">file</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INFO</span>     <span class="n">reading</span> <span class="nb">input</span> <span class="n">file</span>
 <span class="n">INFO</span>     <span class="n">building</span> <span class="n">NumericalPsystem</span>
 <span class="n">INFO</span>     <span class="n">building</span> <span class="n">membrane</span> <span class="nb">list</span>
 <span class="n">INFO</span>     <span class="n">building</span> <span class="n">membrane</span> <span class="n">structure</span>
@@ -231,21 +232,21 @@
     <span class="n">m1</span><span class="p">:</span>
         <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">rez_1</span><span class="p">:</span> <span class="mf">0.00</span><span class="p">,</span> <span class="p">}</span>
         <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">pr_0</span> <span class="o">=</span> <span class="p">{</span> <span class="n">sqrt</span> <span class="p">(</span> <span class="mi">11</span> <span class="p">)</span> <span class="o">+</span> <span class="nb">abs</span> <span class="p">(</span> <span class="mi">0</span> <span class="o">-</span> <span class="mi">12</span> <span class="p">)</span> <span class="o">+</span> <span class="n">log</span> <span class="p">(</span> <span class="mi">13</span> <span class="p">)</span> <span class="o">+</span> <span class="n">log10</span> <span class="p">(</span> <span class="mi">14</span> <span class="p">)</span> <span class="o">+</span> <span class="n">log2</span> <span class="p">(</span> <span class="mi">15</span> <span class="p">)</span> <span class="o">+</span> <span class="n">rez_1</span> <span class="o">*</span> <span class="mi">0</span>  <span class="o">-&gt;</span>  <span class="mi">1</span><span class="o">|</span><span class="n">rez_1</span> <span class="p">}</span>
+        <span class="n">pr_0</span> <span class="o">=</span> <span class="p">{</span> <span class="n">sqrt</span> <span class="p">(</span> <span class="mi">11</span> <span class="p">)</span> <span class="o">+</span> <span class="nb">abs</span> <span class="p">(</span> <span class="mi">0</span> <span class="o">-</span> <span class="mi">12</span> <span class="p">)</span> <span class="o">+</span> <span class="n">log</span> <span class="p">(</span> <span class="mi">13</span> <span class="p">)</span> <span class="o">+</span> <span class="n">log10</span> <span class="p">(</span> <span class="mi">14</span> <span class="p">)</span> <span class="o">+</span> <span class="n">log2</span> <span class="p">(</span> <span class="mi">15</span> <span class="p">)</span> <span class="o">+</span> <span class="nb">min</span> <span class="p">(</span> <span class="p">(</span> <span class="mi">5</span> <span class="p">)</span> <span class="p">(</span> <span class="mi">10</span> <span class="p">)</span> <span class="p">)</span> <span class="o">+</span> <span class="n">rez_1</span> <span class="o">*</span> <span class="mi">0</span>  <span class="o">-&gt;</span>  <span class="mi">1</span><span class="o">|</span><span class="n">rez_1</span> <span class="p">}</span>
     <span class="n">m2</span><span class="p">:</span>
         <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">rez_2</span><span class="p">:</span> <span class="mf">0.00</span><span class="p">,</span> <span class="p">}</span>
         <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">pr_0</span> <span class="o">=</span> <span class="p">{</span> <span class="n">sqrt</span> <span class="p">(</span> <span class="mi">11</span> <span class="o">*</span> <span class="mi">2</span> <span class="p">)</span> <span class="o">+</span> <span class="nb">abs</span> <span class="p">(</span> <span class="p">(</span> <span class="mi">0</span> <span class="o">-</span> <span class="mi">12</span> <span class="p">)</span> <span class="o">/</span> <span class="mi">3</span> <span class="p">)</span> <span class="o">+</span> <span class="n">log</span> <span class="p">(</span> <span class="mi">13</span> <span class="o">+</span> <span class="mi">6</span> <span class="p">)</span> <span class="o">+</span> <span class="n">log10</span> <span class="p">(</span> <span class="mi">14</span> <span class="o">-</span> <span class="mi">7</span> <span class="p">)</span> <span class="o">+</span> <span class="n">log2</span> <span class="p">(</span> <span class="mi">2</span> <span class="o">^</span> <span class="mi">8</span> <span class="p">)</span> <span class="o">+</span> <span class="n">rez_2</span> <span class="o">*</span> <span class="mi">0</span>  <span class="o">-&gt;</span>  <span class="mi">1</span><span class="o">|</span><span class="n">rez_2</span> <span class="p">}</span>
+        <span class="n">pr_0</span> <span class="o">=</span> <span class="p">{</span> <span class="n">sqrt</span> <span class="p">(</span> <span class="mi">11</span> <span class="o">*</span> <span class="mi">2</span> <span class="p">)</span> <span class="o">+</span> <span class="nb">abs</span> <span class="p">(</span> <span class="p">(</span> <span class="mi">0</span> <span class="o">-</span> <span class="mi">12</span> <span class="p">)</span> <span class="o">/</span> <span class="mi">3</span> <span class="p">)</span> <span class="o">+</span> <span class="n">log</span> <span class="p">(</span> <span class="mi">13</span> <span class="o">+</span> <span class="mi">6</span> <span class="p">)</span> <span class="o">+</span> <span class="n">log10</span> <span class="p">(</span> <span class="mi">14</span> <span class="o">-</span> <span class="mi">7</span> <span class="p">)</span> <span class="o">+</span> <span class="n">log2</span> <span class="p">(</span> <span class="mi">2</span> <span class="o">^</span> <span class="mi">8</span> <span class="p">)</span> <span class="o">+</span> <span class="nb">max</span> <span class="p">(</span> <span class="p">(</span> <span class="mi">5</span> <span class="p">)</span> <span class="p">(</span> <span class="mi">10</span> <span class="p">)</span> <span class="p">)</span> <span class="o">+</span> <span class="n">rez_2</span> <span class="o">*</span> <span class="mi">0</span>  <span class="o">-&gt;</span>  <span class="mi">1</span><span class="o">|</span><span class="n">rez_2</span> <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="n">INFO</span>     <span class="n">Starting</span> <span class="n">simulation</span> <span class="n">step</span> <span class="mi">1</span>
 <span class="n">INFO</span>     <span class="n">Simulation</span> <span class="n">step</span> <span class="n">finished</span> <span class="n">succesfully</span>
 <span class="n">num_ps</span> <span class="o">=</span> <span class="p">{</span>
   <span class="n">m1</span><span class="p">:</span>
-    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">rez_1</span><span class="p">:</span> <span class="mf">22.93</span><span class="p">,</span> <span class="p">}</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">rez_1</span><span class="p">:</span> <span class="mf">27.93</span><span class="p">,</span> <span class="p">}</span>
     <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
   <span class="n">m2</span><span class="p">:</span>
-    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">rez_2</span><span class="p">:</span> <span class="mf">20.48</span><span class="p">,</span> <span class="p">}</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="p">{</span> <span class="n">rez_2</span><span class="p">:</span> <span class="mf">30.48</span><span class="p">,</span> <span class="p">}</span>
     <span class="n">E</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="p">}</span>
 </pre></div>
@@ -255,9 +256,7 @@
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -279,7 +278,7 @@
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -298,6 +297,7 @@
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
             VERSION:'1.1',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -307,22 +307,17 @@
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>
